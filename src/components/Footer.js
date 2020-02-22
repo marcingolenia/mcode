@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../img/logo.svg'
+import logo from '../img/logo.png'
 import twitter from '../img/social/twitter.svg'
 import linkedin from '../img/social/linkedin.svg'
 
@@ -8,13 +8,14 @@ const Footer = class extends React.Component {
     return (
       <footer className="footer has-background-black has-text-white-ter">
         <div className="footer-items">
-          <div className=""><img src={logo} alt="Kaldi" style={{ width: '14em', height: '10em' }}/></div>
+          <div className=""><img src={logo} alt="Kaldi" style={{ width: '22em', height: '10em' }}/></div>
           <div className="social">
             <a title="twitter" href="https://bit.ly/39Wk3YG">
               <img
                 className="fas fa-lg"
                 src={twitter}
                 alt="Twitter"
+                target="_blank"
                 style={{ width: '1em', height: '1em' }}
               />
             </a>
@@ -22,6 +23,7 @@ const Footer = class extends React.Component {
               <img
                 src={linkedin}
                 alt="linkedin"
+                target="_blank"
                 style={{ width: '1em', height: '1em' }}
               />
             </a>

@@ -7,7 +7,7 @@ subheading: about software engineering, craftmanship, architecture...
 mainpitch:
   title: Yet another IT blog?
   description: >
-    Yess
+    There are already a lot of them so what makes this one special? Absolutely nothing! And that is just fine. I believe that every person has something important to say. I speak on my behalf on this blog, feel free to quote, love or hate. I write about programming, architecture, infrastructure and organisational things. 
 description: >-
-  I am Martin Golenia.
+  My name is Martin. I have been working in the IT industry for 9+ years now. It's been a quite fun and hard ride. in 2020 I've decided to start sharing with others - there were to many things that I have been keeping for myself, to much wories, to much silent disagreements to on what's going on in the IT nowadays. Time to step up!
 ---
