@@ -8,7 +8,7 @@ const Footer = class extends React.Component {
     return (
       <footer className="footer has-background-black has-text-white-ter">
         <div className="footer-items">
-          <div className=""><img src={logo} alt="Kaldi" style={{ width: '22em', height: '10em' }}/></div>
+          <div className=""><img src={logo} alt="Kaldi" style={{ width: '18em' }}/></div>
           <div className="social">
             <a title="twitter" href="https://bit.ly/39Wk3YG">
               <img
