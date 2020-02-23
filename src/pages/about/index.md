@@ -1,19 +1,29 @@
 ---
-templateKey: 'about-page'
-path: /about
-title: About our values
+templateKey: about-page
+title: About me
 ---
-### Shade-grown coffee
-Coffee is a small tree or shrub that grows in the forest understory in its wild form, and traditionally was grown commercially under other trees that provided shade. The forest-like structure of shade coffee farms provides habitat for a great number of migratory and resident species.
+My name is Martin, currently I am living in Warsaw, Poland. I am book consumer - not only related to techy things but also Fantasy and Sci-fi. I own two cats, and I am owned by my wife who profesionally does the Business intellegicence stuff.
 
-### Single origin
-Single-origin coffee is coffee grown within a single known geographic origin. Sometimes, this is a single farm or a specific collection of beans from a single country. The name of the coffee is then usually the place it was grown to whatever degree available.
+Currently I am reading (I try do update this list once per month):
 
-### Sustainable farming
-Sustainable agriculture is farming in sustainable ways based on an understanding of ecosystem services, the study of relationships between organisms and their environment. What grows where and how it is grown are a matter of choice and careful consideration for nature and communities.
+* The Pragmatic Programmer, 20th Anniversary Edition
+* Sapiens: A Brief History of Humankind
+* Developer Hegemony: The Future of Labor
 
-### Direct sourcing
-Direct trade is a form of sourcing practiced by some coffee roasters. Advocates of direct trade practices promote direct communication and price negotiation between buyer and farmer, along with systems that encourage and incentivize quality.
+Besides when I realize that it I should loose some weight (this happens few times per year) I try to reach half-marathon distance by running each time starting over and over again (current record is 20km - almost!).
 
-### Reinvest profits
-We want to truly empower the communities that bring amazing coffee to you. That’s why we reinvest 20% of our profits into farms, local businesses and schools everywhere our coffee is grown. You can see the communities grow and learn more about coffee farming on our blog.
+### Career
+
+Currently I am full-stack software engineer working at Rydoo. I also worked for big coorporations, banks, software house, outsourcing agencies. I am living mostly in .Net related world. Thankfully Microsoft strategy changed a little bit (cross-platform and open source techs) so I am still with them. C#, F#, Typescript but also sometimes pure JS, MS Sql but also postgres, mongodb, Rabbit, Docker and some more. I am also fan of TDD, DDD and devops guy.
+
+### Personal views on software development
+
+I can't imagine going back to non-devops culture or not doing TDD. I should write some posts about this in near future.
+
+I see big value in functional programming (immutable data structures, concise and exact code thanks to types, records, unions, techniques like partial application). There is a drawback however - you can't easily find a functional dev job (at least in Poland). You have to create that place in your company. 
+
+I don't like the microservices hype... that might be controversial but that's how it is. I do them sometimes but only when the value that they bring is greater then the complexity cost. What I do like is modular monolith and extracing the "modules" to microservices when needed.
+
+I also don't like the agile stuff - again controlversial. But agile has lost it way. I  appreciate the agile software development manifesto, the values that scrum brings, extreme programming, using kanban etc... but in reality we have buzz-word "agile" and army of high-cost agile-advising companies, certficates, unskilled scrum masters. This simply has to change.
+
+More will come in blog posts...
