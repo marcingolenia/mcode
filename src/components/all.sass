@@ -9,13 +9,53 @@ $primary-invert: $kaldi-red-invert
 $body-color: #333
 $black: #2b2523
 
+nav a
+	position: relative;
+	display: inline-block;
+	outline: none;
+	color: #fff;
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 400;
+	text-shadow: 0 0 1px rgba(255,255,255,0.3);
+	font-size: 1.35em;
+
+.cl-effect-1 a::before,
+.cl-effect-1 a::after
+	display: inline-block;
+	opacity: 0;
+	transition: transform 0.3s, opacity 0.2s;
+
+.cl-effect-1 a::before
+	margin-right: 10px;
+	content: '[';
+	transform: translateX(20px);
+
+.cl-effect-1 a::after
+	margin-left: 10px;
+	content: ']';
+	transform: translateX(-20px);
+
+.cl-effect-1 a:hover::before,
+.cl-effect-1 a:hover::after,
+.cl-effect-1 a:focus::before,
+.cl-effect-1 a:focus::after
+	opacity: 1;
+	transform: translateX(0px);
+
 .navbar .navbar-menu
   box-shadow:none !important
+
+.active-nav
+  font-weight: 600
+  color: black !important
 
 .footer-items
   display: flex
   align-items: center
   justify-content: center
+  line-height: 2
 
 .content .taglist
   list-style: none
@@ -75,6 +115,9 @@ $black: #2b2523
 .margin-top-0
   margin-top: 0 !important
 
+a.navbar-item:hover 
+  color: black !important
+
 .navbar-item .icon
   color: $primary
 // Override for use of svg's from https://simpleicons.org/
@@ -87,6 +130,7 @@ $black: #2b2523
 footer.footer
   padding: 1rem
   background-color: transparent
+  text-align: center
 
 //Menu overrides
 $menu-item-color: $white-ter

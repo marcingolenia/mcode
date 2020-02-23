@@ -10,25 +10,24 @@ const Footer = class extends React.Component {
         <div className="footer-items">
           <div className=""><img src={logo} alt="Kaldi" style={{ width: '18em' }}/></div>
           <div className="social">
-            <a title="twitter" href="https://bit.ly/39Wk3YG">
+            <a title="twitter" href="https://bit.ly/39Wk3YG" target="_blank">
               <img
                 className="fas fa-lg"
                 src={twitter}
                 alt="Twitter"
-                target="_blank"
                 style={{ width: '1em', height: '1em' }}
               />
             </a>
-            <a title="linkedin" href="https://bit.ly/2uY2b0N">
+            <a title="linkedin" href="https://bit.ly/2uY2b0N" target="_blank">
               <img
                 src={linkedin}
                 alt="linkedin"
-                target="_blank"
                 style={{ width: '1em', height: '1em' }}
               />
             </a>
           </div>
         </div>
+        <small>© 2020 MCode Marcin Golenia. All Right Reserved.</small> 
       </footer>
     )
   }
