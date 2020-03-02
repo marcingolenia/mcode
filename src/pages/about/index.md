@@ -10,6 +10,8 @@ Currently I am reading (I will try to keep this up to date)
 | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | --- |
 | [![](/img/pragmatic.jpg)](https://pragprog.com/book/tpp20/the-pragmatic-programmer-20th-anniversary-edition) | [![](/img/hegemony.webp)](https://www.amazon.com/Developer-Hegemony-Erik-Dietrich/dp/0692866809) |     |
 
+<br/>
+
 Besides when I realize that it I should loose some weight (this happens few times per year) I try to reach half-marathon distance by running each time starting over and over again (current record is 20km - almost!).
 
 ### Career
