@@ -4,9 +4,11 @@ title: About me
 ---
 My name is Martin, currently I am living in Warsaw, Poland. I am book consumer - not only related to techy things but also Fantasy and Sci-fi. I own two cats, and I am owned by my wife who profesionally does the Business intellegicence stuff.
 
-Currently I am reading (I will try to keep this up to date):
+Currently I am reading (I will try to keep this up to date)
 
-[![](/img/hegemony.webp)](https://www.amazon.com/Developer-Hegemony-Erik-Dietrich/dp/0692866809) [![](/img/pragmatic.jpg)](https://pragprog.com/book/tpp20/the-pragmatic-programmer-20th-anniversary-edition)|
+| <div style="width:210px">The pragmatic programmer</div>                                                      | <div style="width:210px">Developer Hegemony</div>                                                |     |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | --- |
+| [![](/img/pragmatic.jpg)](https://pragprog.com/book/tpp20/the-pragmatic-programmer-20th-anniversary-edition) | [![](/img/hegemony.webp)](https://www.amazon.com/Developer-Hegemony-Erik-Dietrich/dp/0692866809) |     |
 
 Besides when I realize that it I should loose some weight (this happens few times per year) I try to reach half-marathon distance by running each time starting over and over again (current record is 20km - almost!).
 
