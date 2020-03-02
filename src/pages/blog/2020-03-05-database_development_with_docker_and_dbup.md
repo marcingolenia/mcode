@@ -26,14 +26,17 @@ The assumption around this library is straightforward. It creates a Version tabl
 
 ## Step 1 - Run PostgresSQL in docker container
 Let's start with simple docker-compose.yml:
-```version: '3.'7
+```
+version: '3.7'
 services:
   db:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: example
+      POSTGRES_PASSWORD: Secret!Passw0rd
 ```
+Having that file just run command `docker-compose up -d`. Then let's verify if docker container with postgres is running on the default port with `docker ps`. You should see this:
+
 ## Step 2 - Create DbUp Console application
 ## Step 3 - Run migrations in docker
 
