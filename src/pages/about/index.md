@@ -4,11 +4,16 @@ title: About me
 ---
 My name is Martin, currently I am living in Warsaw, Poland. I am book consumer - not only related to techy things but also Fantasy and Sci-fi. I own two cats, and I am owned by my wife who profesionally does the Business intellegicence stuff.
 
-Currently I am reading (I try do update this list once per month):
+Currently I am reading (I will try to keep this up to date):
 
-* The Pragmatic Programmer, 20th Anniversary Edition
-* Sapiens: A Brief History of Humankind
-* Developer Hegemony: The Future of Labor
+| Solarized dark | Solarized Ocean |
+| -------------- | --------------- |
+![](/img/hegemony.webp) | ![](/img/hegemony.webp)|
+
+<p float="left">
+  <img src="/img/hegemony.webp" width="100" />
+  <img src="/img/hegemony.webp" width="100" /> 
+</p>
 
 Besides when I realize that it I should loose some weight (this happens few times per year) I try to reach half-marathon distance by running each time starting over and over again (current record is 20km - almost!).
 
