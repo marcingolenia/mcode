@@ -198,8 +198,7 @@ crazy_database=# \dt
  public | schemaversions | table | postgres
 (2 rows)
 
-crazy_database=# SELECT * FROM schemaversions
-crazy_database-# ;
+crazy_database=# SELECT * FROM schemaversions;
  schemaversionsid |                   scriptname                    |          applied
 ------------------+-------------------------------------------------+----------------------------
                 1 | DbMigrator.SqlScripts.001_AddTable_Customer.sql | 2020-03-03 22:39:44.720556
@@ -209,4 +208,12 @@ crazy_database-# ;
 crazy_database=#
 ```
 ## Step 3 - Run migrations in docker
-Coming soon :)
+One may ask why? We already can run DbUp in using dotnet CLI against dockerized postgres. This is a good start but when your app is growing and contains different services with different databases this really simplifies your life. Everything you have to do  is `docker-compose up` and you are ready to go with all your databases up to date! This is a game changer when you want to run integration-tests. It is still possible without DbUp being dockerized but the CI scripts are growing with more and more commands. With good docker-compose you simply don't have to worry about that. Also when I write integration tests I tend to play with database causing some rubbish data. It is really easy to `docker-compose down` and `docker-compose up` and have everyting fresh. Multiply this act by few times per day and you can save some time for coffee! 
+
+We have two options here:
+* Add more layers on top of postgres image. The layers will contain netcore and DbMibrator.
+* Create other docker-image with netcore and DbMigrator. The container with DbMigrator will reach postgres apply migration and exit automatically. 
+
+Both options are good. Let's got with the first one.
+
+... to be continued...
