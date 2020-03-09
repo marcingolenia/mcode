@@ -135,13 +135,9 @@ postgres=# \c crazy_database
 You are now connected to database "crazy_database" as user "postgres".
 ```
 
-Let's add 2 basic sql scripts to create simple tables.
+Let's add 2 basic sql scripts to create simple tables:
 
-![](/img/2_embedded.png)
-
-Set the script files as embedded ressources. You can do it in your IDE or in csproj. Example scripts looks like this:
-
-`001_AddTable_Customer.sql`
+*09032020_AddTable_Customer.sql*
 ```
 CREATE TABLE Customers (
     Id int,
@@ -150,7 +146,7 @@ CREATE TABLE Customers (
     Address varchar(255)
 );
 ```
-`002_FillSampleData.sql`
+*002_FillSampleData.sql*
 ```
 INSERT INTO Customers VALUES
 (
@@ -166,6 +162,10 @@ INSERT INTO Customers VALUES
     'Somwhere 2/12'
 )
 ```
+Set the script files as embedded ressources. You can do it in your IDE or in csproj. Example scripts looks like this:
+
+![](/img/2_embedded.png)
+
 Having those things let's run the migrator again.
 ```
 λ dotnet run
@@ -214,6 +214,163 @@ We have two options here:
 * Add more layers on top of postgres image. The layers will contain netcore and DbMibrator.
 * Create other docker-image with netcore and DbMigrator. The container with DbMigrator will reach postgres apply migration and exit automatically. 
 
-Both options are good. Let's got with the first one.
+I tend to use the second one. Docker society (and the docker team) advises to not create monolithic Dockerfiles (so containing multiple tech things). Think for a while... this should make sense! You should be able to use postgres in your docker-compose by other services without waiting to some migrations to apply (for example to run migrations for other database. Or to spin up some 3rd party service which don't need your migrations but needs postgres). Let's get our hands dirty again.
 
-... to be continued...
+Create Dockerfile in the DbMigrator project like the following:
+```
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1
+WORKDIR /build
+COPY DbMigrator.csproj ./
+RUN dotnet restore 
+COPY . .
+RUN dotnet publish -o /publish 
+WORKDIR /publish 
+CMD ["sh", "-c", "dotnet DbMigrator.dll \"${DB_CONNECTION}\""]
+```
+It's easy one. If your are not sure what is going on you should definetely check the docker docs. In short (number contains script line numbers):
+
+1. Use dotnet core sdk base image
+2. Switch to build directory
+3. Copy the csproj first 
+4. Restore the packages
+5. Copy rest of the files into the container
+6. Obvious...
+7. Change the working directory to publish
+8. Set the default parameters which will be passed to running container and run command with shell (by involving shell we can make use of env variables).
+
+Line 3-4 embrace docker layers caching so we don't need to restore the packages each time we edit a DbMigrator source file. 
+
+Now it is time to update our compose-file. 
+
+```
+version: '3.6'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Secret!Passw0rd
+      POSTGRES_USER: postgres
+      POSTGRES_DB: crazy_database
+    ports:
+      - 5432:5432
+  db-migrations:
+    build:
+      context: DbMigrator/
+      dockerfile: ./Dockerfile
+    depends_on: 
+      - db
+    environment:
+      DB_CONNECTION: "Host=db;User Id=postgres;Password=Secret!Passw0rd;Database=crazy_database;Port=5432"
+```
+
+The depends on tells docker that even if we decide to run this command:
+``docker-compose up -d db-migrations``
+then it should run db container as well as this is its downstream dependency.
+
+DONE! 
+
+Let's check if this works. Just run ``docker-compose up -d``. I have this output:
+```
+λ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+d4546121a9ec        postgres            "docker-entrypoint.s…"   6 seconds ago       Up 5 seconds        0.0.0.0:5432->5432/tcp   postgres_db_1
+```
+Where is our migrator? Nowhere. There is no long-running process that docker can attach to (some kind of web listener on specific port). The Migrator was deployed and exited so the container lifecycle ended. Let's check the compose logs using ``docker-compose logs``.
+
+```
+db-migrations_1  | Master ConnectionString => Host=db;Username=postgres;Password=***************;Database=postgres;Port=5432
+db-migrations_1  | Unhandled exception. System.Net.Sockets.SocketException (111): Connection refused
+db-migrations_1  |    at Npgsql.NpgsqlConnector.Connect(NpgsqlTimeout timeout)
+db-migrations_1  |    at Npgsql.NpgsqlConnector.RawOpen(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+db-migrations_1  |    at Npgsql.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+db-migrations_1  |    at Npgsql.ConnectorPool.AllocateLong(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+db-migrations_1  |    at Npgsql.NpgsqlConnection.Open(Boolean async, CancellationToken cancellationToken)
+db-migrations_1  |    at Npgsql.NpgsqlConnection.Open()
+db-migrations_1  |    at PostgresqlExtensions.PostgresqlDatabase(SupportedDatabasesForEnsureDatabase supported, String connectionString, IUpgradeLog logger)
+db-migrations_1  |    at PostgresqlExtensions.PostgresqlDatabase(SupportedDatabasesForEnsureDatabase supported, String connectionString)
+db-migrations_1  |    at DbMigrator.Program.Main(String[] args) in /build/Program.cs:line 15
+db_1             | performing post-bootstrap initialization ... ok
+```
+
+That's bad. What's going on? Postgres didn't make it to be up sooner than migrator so the connection was refused. Let's add restart on-failure policy to compose yml file:
+```
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Secret!Passw0rd
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432
+  db-migrations:
+    build:
+      context: DbMigrator/
+      dockerfile: ./Dockerfile
+    depends_on: 
+      - db
+    environment:
+      DB_CONNECTION: "Host=db;User Id=postgres;Password=Secret!Passw0rd;Database=crazy_database;Port=5432"
+    restart: on-failure
+```
+
+Let's run everything again. First let's check for running containers:
+```
+λ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+```
+Empty. Let's compose up:
+```
+λ docker-compose up -d --build
+Starting postgres_db_1 ... done
+Starting postgres_db-migrations_1 ... done
+```
+Let's enter containers bash and check the db schema:
+```
+λ docker exec -it 30d bash
+root@30db9b19add6:/# psql -U postgres
+psql (12.2 (Debian 12.2-2.pgdg100+1))
+Type "help" for help.
+
+postgres=# \l
+                                    List of databases
+      Name       |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
+-----------------+----------+----------+------------+------------+-----------------------
+ crazy_database  | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ postgres        | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0       | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+                 |          |          |            |            | postgres=CTc/postgres
+ template1       | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+                 |          |          |            |            | postgres=CTc/postgres
+(5 rows)
+
+postgres=# \c crazy_database
+You are now connected to database "crazy_database" as user "postgres".
+crazy_database=# \dt
+             List of relations
+ Schema |      Name      | Type  |  Owner
+--------+----------------+-------+----------
+ public | customers      | table | postgres
+ public | schemaversions | table | postgres
+(2 rows)
+
+crazy_database=#
+```
+Done! 
+
+## Troubles 
+One thing you may run into when playing with docker:
+```
+Traceback (most recent call last):
+  File "site-packages\docker\utils\build.py", line 96, in create_archive
+PermissionError: [Errno 13] Permission denied: '\\\\?\\C:\\postgres\\DbMigrator\\.vs\\DbMigrator\\v16\\Server\\sqlite3\\db.lock'
+```
+Just add ``.dockerignore`` file with this content:
+```
+.vs
+```
+And you are good to go (we've just ignored some visual studio internal things from docker commands ie copy).
+
+## Github repo
+Is here: https://github.com/marcingolenia/postgres-dbup
