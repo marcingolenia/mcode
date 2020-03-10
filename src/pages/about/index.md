@@ -2,7 +2,7 @@
 templateKey: about-page
 title: About me
 ---
-My name is Martin, currently I am living in Warsaw, Poland. I am book consumer - not only related to techy things but also Fantasy and Sci-fi. I own two cats, and I am owned by my wife who profesionally does the Business intellegicence stuff.
+My name is Marcin, currently I am living in Warsaw, Poland. I am book consumer - not only related to techy things but also Fantasy and Sci-fi. I own two cats, and I am owned by my wife who profesionally does the Business intellegicence stuff.
 
 Currently I am reading (I will try to keep this up to date)
 
