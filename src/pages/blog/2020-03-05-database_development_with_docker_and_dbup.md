@@ -13,7 +13,7 @@ tags:
   - sqlserver
   - postgres
 ---
-I won't introduce you to docker or Postgres but in short DbUp is a .NET Library that helps you deploy changes to your SQL database. It supports:
+I won't introduce you to docker or Postgres - you should have some basic knowledge in this area although I will follow you with every step. When it comes to DbUp it is a .NET Library that helps you deploy changes to your SQL database. It supports:
 
 * SqlServer
 * MySql
@@ -22,7 +22,9 @@ I won't introduce you to docker or Postgres but in short DbUp is a .NET Library 
 * Oracle
 * Firebird
 
-The assumption around this library is straightforward. It creates a Version table to keep track which scripts were executed and applies new ones incrementally. [Check the docs](https://dbup.readthedocs.io/en/latest/) to find out more.
+The assumption around this library is straightforward. It creates a version table to keep track which scripts were executed and applies new ones incrementally. It embraces transitions instead of "state". Thanks to this approach you can upgrade your databases without db downtime. [Check the docs](https://dbup.readthedocs.io/en/latest/) to find out more.
+
+Ready? So let's Go!
 
 ## Step 1 - Run PostgresSQL in docker container
 
@@ -36,15 +38,16 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: Secret!Passw0rd
+      POSTGRES_USER: postgres
     ports:
         - 5432:5432
 ```
 
-Having that file just run command `docker-compose up -d`. Then let's verify if docker container with postgres is running on the default port with `docker ps`. You should see this:
+Having that file let's just run command `docker-compose up -d`. Now we can verify if docker container with postgres is running on the default port with `docker ps`. You should see this:
 
 ![](/img/1_docker_ps.png)
 
-So we have postgres up and running. We can play a little bit with it by connecting to the container using `docker exec -it a74 bash`. After we enter interactie mode let's run `psql -U postgres`. We can list databases using `\l` command or use sql to do whatever we wnat. Let's for example create random database.
+So once we have postgres up and running we can play a little bit with it by connecting to the container using `docker exec -it a74 bash` (make sure to enter yours container id). After we enter interactie mode let's run `psql -U postgres`. We can list databases using `\l` command or use sql to do whatever we wnat. As an example I will create random database.
 
 ```
 postgres=# CREATE DATABASE mytestdb;
@@ -69,7 +72,7 @@ Use `\q` command to exit psql and of course ctr+d combination  to leave containe
 
 ## Step 2 - Create DbUp Console application
 
-Let's just create new netcore console app. You can use your IDE but let's stick with CLI in this blog post. First navigate to the directory with your docker-compose.yml and run `dotnet new console -o DbMigrator` or any other name. Navigate to new project fodler and add two packages
+Let's create new netcore console app. You can use your IDE but I will stick with CLI for now. First navigate to the directory with your docker-compose.yml and run `dotnet new console -o DbMigrator` or any other name. Navigate to new project fodler and add two packages
 
 * `dotnet add package dbup-core`
 * `dotnet add package dbup-postgresql`
@@ -181,7 +184,7 @@ Executing Database Server script 'DbMigrator.SqlScripts.002_FillSampleData.sql'
 Upgrade successful
 Success!
 ```
-Perfect! So we already have a postgres instance running in docker container and we are able to incrementally apply migrations using DbUp. Let's see what's in the database;
+Perfect! So we already have a postgres instance running in docker container and we are able to incrementally apply migrations using DbUp. Let's see what is in the database;
 ```
 λ docker exec -it 43c bash
 root@43c7615a4146:/# psql -U postgres
@@ -208,13 +211,13 @@ crazy_database=# SELECT * FROM schemaversions;
 crazy_database=#
 ```
 ## Step 3 - Run migrations in docker
-One may ask why? We already can run DbUp in using dotnet CLI against dockerized postgres. This is a good start but when your app is growing and contains different services with different databases this really simplifies your life. Everything you have to do  is `docker-compose up` and you are ready to go with all your databases up to date! This is a game changer when you want to run integration-tests. It is still possible without DbUp being dockerized but the CI scripts are growing with more and more commands. With good docker-compose you simply don't have to worry about that. Also when I write integration tests I tend to play with database causing some rubbish data. It is really easy to `docker-compose down` and `docker-compose up` and have everyting fresh. Multiply this act by few times per day and you can save some time for coffee! 
+One may ask why? We already can run DbUp using dotnet CLI against dockerized postgres. This is a good start but when your app is growing and contains different services with different databases this really simplifies your life. Everything you have to do  is `docker-compose up` and you are ready to go with all your databases + schema up to date! This is a game changer when you want to run integration-tests. It is still possible without DbUp being dockerized but the CI scripts are growing with more and more commands. With good docker-compose you simply don't have to worry about that. Also when I write integration tests I tend to play with database causing some rubbish data. It is really easy to `docker-compose down` and `docker-compose up` and have everyting fresh. Multiply this act by few times per day and you can save some time for coffee! 
 
 We have two options here:
 * Add more layers on top of postgres image. The layers will contain netcore and DbMibrator.
 * Create other docker-image with netcore and DbMigrator. The container with DbMigrator will reach postgres apply migration and exit automatically. 
 
-I tend to use the second one. Docker society (and the docker team) advises to not create monolithic Dockerfiles (so containing multiple tech things). Think for a while... this should make sense! You should be able to use postgres in your docker-compose by other services without waiting to some migrations to apply (for example to run migrations for other database. Or to spin up some 3rd party service which don't need your migrations but needs postgres). Let's get our hands dirty again.
+I tend to use the second approach. Docker society (and the docker team) advises to not create monolithic Dockerfiles (so containing multiple tech things). Think for a while... this should make sense! You should be able to use postgres in your docker-compose by other services without waiting to some migrations to apply (for example to run migrations for other database. Or to spin up some 3rd party service which don't need your migrations but needs postgres). Let's get our hands dirty again.
 
 Create Dockerfile in the DbMigrator project like the following:
 ```
@@ -264,9 +267,9 @@ services:
       DB_CONNECTION: "Host=db;User Id=postgres;Password=Secret!Passw0rd;Database=crazy_database;Port=5432"
 ```
 
-The depends on tells docker that even if we decide to run this command:
+The `depends_on` tells docker that even if we decide to run this command:
 ``docker-compose up -d db-migrations``
-then it should run db container as well as this is its downstream dependency.
+then it should run db container first as this is its upstream dependency.
 
 DONE! 
 
@@ -320,7 +323,7 @@ Let's run everything again. First let's check for running containers:
 λ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 ```
-Empty. Let's compose up:
+Empty. Let's compose up again:
 ```
 λ docker-compose up -d --build
 Starting postgres_db_1 ... done
@@ -359,7 +362,7 @@ crazy_database=#
 ```
 Done! 
 
-## Troubles 
+## Troubles when using visual studio?
 One thing you may run into when playing with docker:
 ```
 Traceback (most recent call last):
@@ -374,3 +377,6 @@ And you are good to go (we've just ignored some visual studio internal things fr
 
 ## Github repo
 Is here: https://github.com/marcingolenia/postgres-dbup
+
+## Summary
+I hope you will enjoy this way of database development. You should be able to use SqlServer in very similar way - just change the db service in compose file, Program.cs of DbMigrator to work with SqlServer and of course connection string. Check my blog again for next post about some tips for working with migrations!
