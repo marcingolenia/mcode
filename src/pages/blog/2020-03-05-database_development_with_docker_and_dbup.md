@@ -1,7 +1,7 @@
 ---
 templateKey: blog-post
 title: Simplifying database development with docker and DbUp
-date: 2020-02-24T15:04:10.000Z
+date: 2020-03-05T15:04:10.000Z
 description: >-
   Let me show you how you can combine PostgreSQL, Docker and DbUp to create
   pleasant and quick database development environment without installing
