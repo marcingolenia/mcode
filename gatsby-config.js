@@ -66,6 +66,16 @@ module.exports = {
       },
     },
     {
+      resolve: "gatsby-plugin-page-progress",
+      options: {
+        // includePaths: ["/", { regex: "^/blog" }],
+        // excludePaths: ["/blog/beep-beep-lettuce"],
+        height: 3,
+        prependToBody: false,
+        color: `black`
+      }
+    },
+    {
       resolve: 'gatsby-plugin-purgecss', // purges all unused/unreferenced css rules
       options: {
         develop: true, // Activates purging in npm run develop
