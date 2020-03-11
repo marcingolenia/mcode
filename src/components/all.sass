@@ -1,4 +1,6 @@
+@charset "utf-8";
 @import "~bulma/sass/utilities/initial-variables"
+@import "~bulma"
 
 // Config vars
 $kaldi-red: black
@@ -168,10 +170,6 @@ $menu-label-color: $white-ter
   flex-basis: 35%;
   margin: 0 1.5em 0 0;
 
-
-@import "~bulma"
-
-
 // responsiveness
 +tablet-only
   .blog-list-item .featured-thumbnail
@@ -184,3 +182,22 @@ $menu-label-color: $white-ter
     text-align: center;
     max-width: 70%;
     margin: 0 0 1em;
+
+// Bulma + Prismjs fixes
+
+code
+  padding: 0;
+
+.number
+  margin: inherit;
+  padding: inherit;
+  background-color: inherit;
+  border-radius: inherit;
+  display: inherit;
+  font-size: inherit;
+  height: inherit
+  min-width: inherit;
+
+.line-numbers
+  padding-top: 1em;
+  padding-left: 0.5em;

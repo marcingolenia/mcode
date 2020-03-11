@@ -42,6 +42,22 @@ module.exports = {
             },
           },
           {
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              classPrefix: "language-",
+              inlineCodeMarker: null,
+              aliases: {},
+              showLineNumbers: true,
+              noInlineHighlight: false,
+              prompt: {
+                user: "root",
+                host: "localhost",
+                global: false,
+              },
+              escapeEntities: {},
+            }
+          },
+          {
             resolve: 'gatsby-remark-images',
             options: {
               // It's important to specify the maxWidth (in pixels) of
@@ -70,9 +86,9 @@ module.exports = {
       options: {
         // includePaths: ["/", { regex: "^/blog" }],
         // excludePaths: ["/blog/beep-beep-lettuce"],
-        height: 3,
+        height: 5,
         prependToBody: false,
-        color: `black`
+        color: `#2a44ab`
       }
     },
     {

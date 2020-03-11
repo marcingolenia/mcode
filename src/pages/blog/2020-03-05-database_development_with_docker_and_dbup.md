@@ -30,7 +30,7 @@ Ready? So let's Go!
 
 Let's start with simple docker-compose.yml:
 
-```
+```docker
 version: '3.7'
 services:
   db:
@@ -45,11 +45,15 @@ services:
 
 Having that file let's just run command `docker-compose up -d`. Now we can verify if docker container with postgres is running on the default port with `docker ps`. You should see this:
 
-![](/img/1_docker_ps.png)
+```bash
+λ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+a7446521a3dg        postgres            "docker-entrypoint.s…"   6 seconds ago       Up 5 seconds        0.0.0.0:5432->5432/tcp   postgres_db_1
+```
 
 So once we have postgres up and running we can play a little bit with it by connecting to the container using `docker exec -it a74 bash` (make sure to enter yours container id). After we enter interactie mode let's run `psql -U postgres`. We can list databases using `\l` command or use sql to do whatever we wnat. As an example I will create random database.
 
-```
+```bash
 postgres=# CREATE DATABASE mytestdb;
 CREATE DATABASE
 postgres=# \l
@@ -79,7 +83,7 @@ Let's create new netcore console app. You can use your IDE but I will stick with
 
 then modify Program.cs:
 
-```
+```csharp 
 using System;
 using System.Linq;
 using System.Reflection;
@@ -121,7 +125,7 @@ No magic here. Everything is according to [dbup documentation](https://dbup.read
 
 Time to run the app! Let dbup create the crazy_database for us. Run `dotnet run` we should see this:
 
-```
+```bash
 λ dotnet run                                                                                                     
 Master ConnectionString => Host=localhost;Username=postgres;Password=***************;Database=postgres;Port=5432 
 Beginning database upgrade                                                                                       
@@ -133,7 +137,7 @@ Success!
 
 We can connect to docker container again and list databases as described in previous point. Use `\c dbname` to connect to specific database. Works for me:
 
-```
+```bash
 postgres=# \c crazy_database
 You are now connected to database "crazy_database" as user "postgres".
 ```
@@ -141,7 +145,7 @@ You are now connected to database "crazy_database" as user "postgres".
 Let's add 2 basic sql scripts to create simple tables:
 
 *09032020_AddTable_Customer.sql*
-```
+```sql
 CREATE TABLE Customers (
     Id int,
     LastName varchar(255),
@@ -150,7 +154,7 @@ CREATE TABLE Customers (
 );
 ```
 *002_FillSampleData.sql*
-```
+```sql
 INSERT INTO Customers VALUES
 (
     1,
@@ -170,7 +174,7 @@ Set the script files as embedded ressources. You can do it in your IDE or in csp
 ![](/img/2_embedded.png)
 
 Having those things let's run the migrator again.
-```
+```bash
 λ dotnet run
 Master ConnectionString => Host=localhost;Username=postgres;Password=***************;Database=postgres;Port=5432
 Beginning database upgrade
@@ -185,7 +189,7 @@ Upgrade successful
 Success!
 ```
 Perfect! So we already have a postgres instance running in docker container and we are able to incrementally apply migrations using DbUp. Let's see what is in the database;
-```
+```bash
 λ docker exec -it 43c bash
 root@43c7615a4146:/# psql -U postgres
 psql (12.2 (Debian 12.2-2.pgdg100+1))
@@ -220,7 +224,7 @@ We have two options here:
 I tend to use the second approach. Docker society (and the docker team) advises to not create monolithic Dockerfiles (so containing multiple tech things). Think for a while... this should make sense! You should be able to use postgres in your docker-compose by other services without waiting to some migrations to apply (for example to run migrations for other database. Or to spin up some 3rd party service which don't need your migrations but needs postgres). Let's get our hands dirty again.
 
 Create Dockerfile in the DbMigrator project like the following:
-```
+```dockerfile
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 WORKDIR /build
 COPY DbMigrator.csproj ./
@@ -245,7 +249,7 @@ Line 3-4 embrace docker layers caching so we don't need to restore the packages 
 
 Now it is time to update our compose-file. 
 
-```
+```docker
 version: '3.6'
 services:
   db:
@@ -274,14 +278,14 @@ then it should run db container first as this is its upstream dependency.
 DONE! 
 
 Let's check if this works. Just run ``docker-compose up -d``. I have this output:
-```
+```bash
 λ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 d4546121a9ec        postgres            "docker-entrypoint.s…"   6 seconds ago       Up 5 seconds        0.0.0.0:5432->5432/tcp   postgres_db_1
 ```
 Where is our migrator? Nowhere. There is no long-running process that docker can attach to (some kind of web listener on specific port). The Migrator was deployed and exited so the container lifecycle ended. Let's check the compose logs using ``docker-compose logs``.
 
-```
+```bash
 db-migrations_1  | Master ConnectionString => Host=db;Username=postgres;Password=***************;Database=postgres;Port=5432
 db-migrations_1  | Unhandled exception. System.Net.Sockets.SocketException (111): Connection refused
 db-migrations_1  |    at Npgsql.NpgsqlConnector.Connect(NpgsqlTimeout timeout)
@@ -297,7 +301,7 @@ db_1             | performing post-bootstrap initialization ... ok
 ```
 
 That's bad. What's going on? Postgres didn't make it to be up sooner than migrator so the connection was refused. Let's add restart on-failure policy to compose yml file:
-```
+```docker
 services:
   db:
     image: postgres
@@ -319,18 +323,18 @@ services:
 ```
 
 Let's run everything again. First let's check for running containers:
-```
+```bash
 λ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 ```
 Empty. Let's compose up again:
-```
+```bash
 λ docker-compose up -d --build
 Starting postgres_db_1 ... done
 Starting postgres_db-migrations_1 ... done
 ```
 Let's enter containers bash and check the db schema:
-```
+```bash
 λ docker exec -it 30d bash
 root@30db9b19add6:/# psql -U postgres
 psql (12.2 (Debian 12.2-2.pgdg100+1))
@@ -370,7 +374,7 @@ Traceback (most recent call last):
 PermissionError: [Errno 13] Permission denied: '\\\\?\\C:\\postgres\\DbMigrator\\.vs\\DbMigrator\\v16\\Server\\sqlite3\\db.lock'
 ```
 Just add ``.dockerignore`` file with this content:
-```
+```docker
 .vs
 ```
 And you are good to go (we've just ignored some visual studio internal things from docker commands ie copy).
