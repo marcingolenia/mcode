@@ -42,24 +42,24 @@ It's not a tragedy. You do the code review so you can catch this and resolve con
 ## 4. Use the right DSL
 There are two main options for writing migrations. One is using the syntax which the chosen migrator provides for you like fluent syntax from fluent migrator or EntityFramework migrations. This may look more or less like this:
 ```csharp
-            Create.Table(tableName: "Clients")
-                .WithColumn(name: "Id")
-                .AsInt32()
-                .PrimaryKey()
-                .Identity()
-                .WithColumn(name: "Name")
-                .AsString(int.MaxValue)
-                .NotNullable()
-                .WithColumn(name: "AccountNumber")
-                .AsString(int.MaxValue)
-                .NotNullable();
-            Create.ForeignKey(foreignKeyName: "FK_Clients_To_Departments")
-                .FromTable(table: "Departments")
-                .InSchema(schemaName: "dbo")
-                .ForeignColumn(column: "ClientId")
-                .ToTable(table: "Client")
-                .InSchema(schemaName: "dbo")
-                .PrimaryColumn(column: "Id");
+Create.Table(tableName: "Clients")
+  .WithColumn(name: "Id")
+  .AsInt32()
+  .PrimaryKey()
+  .Identity()
+  .WithColumn(name: "Name")
+  .AsString(int.MaxValue)
+  .NotNullable()
+  .WithColumn(name: "AccountNumber")
+  .AsString(int.MaxValue)
+  .NotNullable();
+Create.ForeignKey(foreignKeyName: "FK_Clients_To_Departments")
+  .FromTable(table: "Departments")
+  .InSchema(schemaName: "dbo")
+  .ForeignColumn(column: "ClientId")
+  .ToTable(table: "Client")
+  .InSchema(schemaName: "dbo")
+  .PrimaryColumn(column: "Id");
 ```
 This can be tempting because it's C# - the language you love but there are 2 drawbacks: 
 1. This is really verbrose - try to write it in SQL.
