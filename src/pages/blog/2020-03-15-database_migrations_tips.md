@@ -96,6 +96,18 @@ It's not something necessary but this can increase your productivity. [Check my 
 Sometimes you simply have to ask about default values for new columns - in the business people language of course. For example: 
 > Hey, I am just finishing adding the account number to our customers but I don't know what should we put there for the existing ones. Should this be some kind of N/A to be filled later by our admin-users or You want me to fill them in advance with the file you will provide to me? 
 
+## 11. Migrations scripts should be idempotent
+This means that your scripts should be wrapped with code that checks for database objects existence. For example: ``CREATE TABLE IF NOT EXISTS <tablename>``, or ``ALTER TABLE if exists <tablename> add if not exists <columnname> <columntype>`` in postgres or for sql server: 
+```sql
+IF NOT EXISTS (
+  SELECT * 
+  FROM   sys.columns 
+  WHERE  object_id = OBJECT_ID(N'[dbo].[<tablename>]') 
+         AND name = '<columnname>'
+)
+``` 
+and so on. The migrator tracks scripts that have already been executed, but when your have idempotence you can easily switch from one migrator to other one (being specific-tool independent is good practice). Just move the migrations-scripts to new project and execute. 
+
 ## Summary
 I hope that this tips will make your life easier. With some extra awerness while writing database migration you can save some mistakes that I had been making. Good luck!
 
