@@ -26,6 +26,6 @@ I see big value in functional programming (immutable data structures, concise an
 
 I don't like the microservices hype... that might be controversial but that's how it is. I do them sometimes but only when the value that they bring is greater then the complexity cost. What I do like is modular monolith and extracing the "modules" to microservices when needed.
 
-I also don't like the agile stuff - again controlversial. But agile has lost it way. I  appreciate the agile software development manifesto, the values that scrum brings, extreme programming, using kanban etc... but in reality we have buzz-word "agile" and army of high-cost agile-advising companies, certficates, unskilled scrum masters. This simply has to change.
+I also don't like the current shape of agile stuff in our industry - again controlversial. But agile has lost it way. I  appreciate the agile software development manifesto, the values that scrum brings, extreme programming, using kanban etc... but in reality we have buzz-word "agile" and army of high-cost agile-advising companies, certficates, unskilled scrum masters. This simply has to change.
 
 More will come in blog posts...

@@ -1,0 +1,71 @@
+---
+templateKey: blog-post
+title: 'Team-building workshop: Feedback on skills development'
+date: 2020-03-29T19:09:10.000Z
+description: >-
+  Once I came up with a team building workshop which you can carry out with your teammates. It focuses on skills
+  being developed during project duration. It may help with early burnout detection, silent disagreement or 
+  simply it may help you with moving forward with some nice techy idea. After the workshop I've aquired quick feedback with
+  2 x 4/5 and 2 x 5/5. It should take about 30-40 minutes (depending on few factors).
+featuredpost: false
+featuredimage: /img/team.jpg
+tags:
+  - 'agile software development'
+---
+## 1. Motivation
+How I get into the idea of the workshop? First of all let me remind you 3 of 12 princples from <a href="https://agilemanifesto.org/principles.html" target="_blank">agile manifesto</a>.
+>At regular intervals, the team reflects on how to become more effective, then tunes and adjusts its behavior accordingly. 
+
+>Continuous attention to technical excellence and good design enhances agility. 
+
+>Build projects around motivated individuals. Give them the environment and support they need, and trust them to get the job done.
+
+The workshop should help you find some opportunities to learn from each other in some areas/technologies to become a better professionalist. Also consider the other way - you can help other to become better as a team. You can find out also about some common interests and decide to try something new (do some experimentation) to keep the team motivated. That was the main reason that drove me to do this - I felt simply a little bit bored, I felt that I am not learning anything new at my job, I just teach others and my free time is the only span where I work on self-development. Spoiler: I was wrong.
+
+## 2. The how-to
+We will need:
+* Markers for each of the participants.
+* A paintable space (board or wall).
+* Sticky notes
+
+Start with short introduction: 
+> Dear team, we gonna look into what have we been learning during our coorporation. 
+That's it. Keep the rest for yourself now. It will help the others to stay on the right context.
+
+Now - give everyone 2 sticky notes and a marker. Ask them to think about what they have learnt during last 6 months at the work and write on the first sticky note a grade in range 1 to 3 where
+* 1 means that I've learnt nothing or almost nothing.
+* 2 means that I've learnt something not too much but still.
+* 3 means that I've learnt great stuff.
+
+Once they are ready, ask them how much have their learnt during last month, same scale. Take the sticky notes, write names on the board and place the notes next to the names in rows. The board should look like this:
+
+[Picture]
+
+Now it's time for short interview. Start asking the people in turn about what have they learnt and write this next to the sticky notes. When you are ready ask if someone wants to change something? (the grade or the mini-list of stuff learnt). This is desired - the people should now come into the "A-Ha!" moment that they learnt this and that as well. You can write the changes in other color to visualize the difference. The board should look like this:
+
+[Picture]
+
+Now it's time to short story telling. Ask the people to talk about the things they have learnt. Should we spread that knowledge? Do a workshop, pair programming etc. Maybe someone learnt something good in his spare time and we can invest some time to use this knowledge to improve something? If no one talked about it, tell a little bit about the fact that people have learned things they would not even think they have learned. This will keep their motivation in a good shape.
+
+The final round is about "wishes". Just ask the team members in turn what they are looking to learn next. The final board:
+
+[Picture]
+
+The side effect of this is that you can find out that someone has no ambitions. I advise you to leave that person for now and coach few days later. Probably till that time the person will think about it and ask the question:
+> How I want to be a good programmer when my only ambition is to do the 8h workday?
+This is dangerous and you should coach carefully - maybe someone have hard times now and needs a month to fix something in his life? Maybe someone is simply lazy and he will be better match somwhere else? This are hard questions and it has to be adressed individually.
+
+The key takeaway from this part should be a discussion again: do we have common interests? If yes what we gonna do with them? Why someone wants to learn X-stuff? Can we invest in that to make an improvment and let that person learn this X-stuff during his work day?
+
+Our team found out that we want to write more F# and so we do. One team member also wrote that he want to learn more about stuff we currently use in the project so do more pair-programming with him. Listen closely and try to find this actions.
+## 3. Expected conclusions & actions
+I hope you will find more, but this are the most certain points:
+* You may find out that despite your doubts you still do learn new things (my case). This will keep you motivation in good conditon.
+* You may find out that you don't learn new things and so do your teammates (I believe it's not possible that you are the only person that does not learn anything new in the team. If this is the case - time to change the team). As you have identified the problem it's the right time to talk about it. Try new library? Create new project in new language? Rewrite some legacy part into new tech? There are plenty of things you can do.
+* You may find out that someone learned something important and it will be extremly useful to spread this knowledge to improve <a href="https://en.wikipedia.org/wiki/Bus_factor" target="_blank">bus factor</a>. 
+* You may find out that you and some of your teammates have similar interests. For example if there are 2 persons in the team that wants to learn kubernetess maybe it's worth to pair find some good points and convience the rest to invest some time in the research and do it! Learn by doing it and get paid for it.
+
+Finally I can imagine that the workshop can be total disaster in one case - no one learns nothing and no one wants to. You should notice this without the workshop and listen to me: It's not the workshop to be a distater, it's the team. Coac
+
+## Summary
+I hope you will enjoy the workshop with your team and that you will come into some "A-ha!" moments. Feel free to modify it - If you have some nice suggestion reach me via the contact form! I am looking forward to my home-grown workshop.
