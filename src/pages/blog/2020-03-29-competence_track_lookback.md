@@ -53,6 +53,7 @@ The final round is about "wishes". Just ask the team members in turn what they a
 
 The side effect of this is that you can find out that someone has no ambitions. I advise you to leave that person for now and coach few days later. Probably till that time the person will think about it and ask himself the question:
 > How I want to be a good programmer when my only ambition is to do the 8h workday?
+
 This is dangerous and you should coach carefully - maybe someone have hard times now and needs a month to fix something in his life? Maybe someone is simply lazy and he will be better match somwhere else? This are hard questions and it has to be adressed individually.
 
 The key takeaway from this part should be a discussion again: do we have common interests? If yes what we gonna do with them? Why someone wants to learn X-stuff? Can we invest in that to make an improvment and let that person learn this X-stuff during his work day?
