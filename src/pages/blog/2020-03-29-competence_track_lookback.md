@@ -28,36 +28,37 @@ We will need:
 * A paintable space (board or wall).
 * Sticky notes
 
-Start with short introduction: 
+Participants: whole team (even product owner). Start with short introduction: 
 > Dear team, we gonna look into what have we been learning during our coorporation. 
-That's it. Keep the rest for yourself now. It will help the others to stay on the right context.
+That's it. Keep the rest for yourself now. It will help the others to stay focused.
 
-Now - give everyone 2 sticky notes and a marker. Ask them to think about what they have learnt during last 6 months at the work and write on the first sticky note a grade in range 1 to 3 where
+Now - give everyone 2 sticky notes and a marker. Ask them to think about what they have learnt during last 6 months (feel free to adjust this interval) at work and write on the first sticky note a grade in range 1 to 3 where
 * 1 means that I've learnt nothing or almost nothing.
 * 2 means that I've learnt something not too much but still.
 * 3 means that I've learnt great stuff.
 
 Once they are ready, ask them how much have their learnt during last month, same scale. Take the sticky notes, write names on the board and place the notes next to the names in rows. The board should look like this:
 
-[Picture]
+![](/img/post3/1.jpg)
 
-Now it's time for short interview. Start asking the people in turn about what have they learnt and write this next to the sticky notes. When you are ready ask if someone wants to change something? (the grade or the mini-list of stuff learnt). This is desired - the people should now come into the "A-Ha!" moment that they learnt this and that as well. You can write the changes in other color to visualize the difference. The board should look like this:
+Now it's time for short interview. Start asking the people in turn about what have they learnt and write this next to the sticky notes. When you are ready ask if someone wants to change something (the given grade or the mini-list of stuff learnt). This is desired - the people should now come into the "A-Ha!" moment that they learnt this and that as well. You can write the changes in different color to visualize the changes. The board should look like this:
 
-[Picture]
+![](/img/post3/2.jpg)
 
 Now it's time to short story telling. Ask the people to talk about the things they have learnt. Should we spread that knowledge? Do a workshop, pair programming etc. Maybe someone learnt something good in his spare time and we can invest some time to use this knowledge to improve something? If no one talked about it, tell a little bit about the fact that people have learned things they would not even think they have learned. This will keep their motivation in a good shape.
 
 The final round is about "wishes". Just ask the team members in turn what they are looking to learn next. The final board:
 
-[Picture]
+![](/img/post3/3.jpg)
 
-The side effect of this is that you can find out that someone has no ambitions. I advise you to leave that person for now and coach few days later. Probably till that time the person will think about it and ask the question:
+The side effect of this is that you can find out that someone has no ambitions. I advise you to leave that person for now and coach few days later. Probably till that time the person will think about it and ask himself the question:
 > How I want to be a good programmer when my only ambition is to do the 8h workday?
 This is dangerous and you should coach carefully - maybe someone have hard times now and needs a month to fix something in his life? Maybe someone is simply lazy and he will be better match somwhere else? This are hard questions and it has to be adressed individually.
 
 The key takeaway from this part should be a discussion again: do we have common interests? If yes what we gonna do with them? Why someone wants to learn X-stuff? Can we invest in that to make an improvment and let that person learn this X-stuff during his work day?
 
-Our team found out that we want to write more F# and so we do. One team member also wrote that he want to learn more about stuff we currently use in the project so do more pair-programming with him. Listen closely and try to find this actions.
+Our team found out that we want to write more F# and so we do. One team member also wrote that he want to learn more about stuff we currently use in the project so we decided to do more pair-programming with him. Listen closely and try to find this actions.
+
 ## 3. Expected conclusions & actions
 I hope you will find more, but this are the most certain points:
 * You may find out that despite your doubts you still do learn new things (my case). This will keep you motivation in good conditon.
@@ -65,7 +66,7 @@ I hope you will find more, but this are the most certain points:
 * You may find out that someone learned something important and it will be extremly useful to spread this knowledge to improve <a href="https://en.wikipedia.org/wiki/Bus_factor" target="_blank">bus factor</a>. 
 * You may find out that you and some of your teammates have similar interests. For example if there are 2 persons in the team that wants to learn kubernetess maybe it's worth to pair find some good points and convience the rest to invest some time in the research and do it! Learn by doing it and get paid for it.
 
-Finally I can imagine that the workshop can be total disaster in one case - no one learns nothing and no one wants to. You should notice this without the workshop and listen to me: It's not the workshop to be a distater, it's the team. Coac
+Finally I can imagine that the workshop can be total disaster in one case - no one learns nothing and no one wants to. You should notice this without the workshop but to be honest with you - It's not the workshop to be a distater, it's the team.
 
 ## Summary
-I hope you will enjoy the workshop with your team and that you will come into some "A-ha!" moments. Feel free to modify it - If you have some nice suggestion reach me via the contact form! I am looking forward to my home-grown workshop.
+I hope you will enjoy the workshop with your team and that you will come into some "A-ha!" moments. Feel free to modify it - If you have some nice suggestion reach me via the contact form! I am looking forward to improve my home-grown workshop.

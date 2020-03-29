@@ -6,12 +6,12 @@ My name is Marcin, currently I am living in Warsaw, Poland. I am book consumer -
 
 Currently I am reading (I will try to keep this up to date)
 
-| <div style="width:252px">The pragmatic programmer</div>                                                      | <div style="width:210px">Developer Hegemony</div>                                                |     |
-| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | --- |
-| [![](/img/pragmatic.jpg)](https://pragprog.com/book/tpp20/the-pragmatic-programmer-20th-anniversary-edition) | [![](/img/hegemony.webp)](https://www.amazon.com/Developer-Hegemony-Erik-Dietrich/dp/0692866809) |     |
+| <div style="max-width:252px">The DevOps Handbook</div> | <div>Designign Data-Intensive Applications </div>              ||
+|-|-|-|-|-|
+| [![](/img/devops.jpg)](https://www.goodreads.com/book/show/26083308-the-devops-handbook) | [![](/img/data.jpg)](https://www.goodreads.com/book/show/23463279-designing-data-intensive-applications)  |     |
 
 <br/>
-
+For more check my <a href="https://www.goodreads.com/review/list/111877027-oo0jinx0oo" target="_blank">goodreads profile</a>.
 Besides when I realize that it I should loose some weight (this happens few times per year) I try to reach half-marathon distance by running each time starting over and over again (current record is 20km - almost!).
 
 ### Career
