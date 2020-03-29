@@ -41,6 +41,10 @@ Once they are ready, ask them how much have their learnt during last month, same
 
 ![](/img/post3/1.jpg)
 
+You should be able to see if the learning curve did not drop. If everyone learned a lot during last 6 months but almost nothing in the last month you should start discussion about what prevents the people from further skills development. Keep in mind that the learning curve isn't linear - there are many distortions including your teammates private life distortions so the drop doesn't have to be a bad thing. Maybe you are just on the "flat" part of the curve.
+
+![](/img/learning.png)
+
 Now it's time for short interview. Start asking the people in turn about what have they learnt and write this next to the sticky notes. When you are ready ask if someone wants to change something (the given grade or the mini-list of stuff learnt). This is desired - the people should now come into the "A-Ha!" moment that they learnt this and that as well. You can write the changes in different color to visualize the changes. The board should look like this:
 
 ![](/img/post3/2.jpg)
