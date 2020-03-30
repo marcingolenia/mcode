@@ -3,14 +3,16 @@ templateKey: blog-post
 title: 'Team-building workshop: Feedback on skills development'
 date: 2020-03-29T19:09:10.000Z
 description: >-
-  Once I came up with a team building workshop which you can carry out with your teammates. It focuses on skills
-  being developed during project duration. It may help with early burnout detection, silent disagreement or 
-  simply it may help you with moving forward with some nice techy idea. After the workshop I've aquired quick feedback with
-  2 x 4/5 and 2 x 5/5. It should take about 30-40 minutes (depending on few factors).
-featuredpost: false
+  Once I came up with a team building workshop which you can carry out with your
+  teammates. It focuses on skills being developed during project duration. It
+  may help with early burnout detection, silent disagreement or  simply it may
+  help you with moving forward with some nice techy idea. After the workshop
+  I've aquired quick feedback with 2 x 4/5 and 2 x 5/5. It should take about
+  30-40 minutes (depending on few factors).
+featuredpost: true
 featuredimage: /img/team.jpg
 tags:
-  - 'agile software development'
+  - agile software development
 ---
 ## 1. Motivation
 How I get into the idea of the workshop? First of all let me remind you 3 of 12 princples from <a href="https://agilemanifesto.org/principles.html" target="_blank">agile manifesto</a>.
