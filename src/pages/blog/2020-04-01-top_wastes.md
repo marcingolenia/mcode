@@ -26,14 +26,33 @@ Toyota has identified seven major types of non-value-adding waste in business or
 You may think that 
 > Ok but Toyota is producing cars right? I am doing software you know... you can't drive with your software home...
 
-I was a little bit sceptical when I firstly encountered the "Lean" word. I was thinking more or less the above but then I started to dig. I thought that it couldn't be that lean has so much traction across many different industries if it wasn't something valueable. I'm glad I was digging. Let's take a closer look to each of the waste. Try to think about the waste now before reading more. Can you identify some of them at your work? 
+I was a little bit sceptical when I firstly encountered the "Lean" word. I was thinking more or less the above but then I started to dig. I thought that it couldn't be that lean has so much traction across many different industries if it wasn't something valueable. I'm glad I was digging. Let's take a closer look to each of the waste with examples that I lived through. Try to think about the waste now before reading more. Can you identify some of them at your work?
 
-## Transport [Handoffs]
+## 1. Transport [Handoffs]
+Do you remember chinese whispers game (for my polish colleagues it's głuchy telefon)? It's like that. With each handoff the whispered sentence gets more and more malformed. Or better said: with each handoff some knowledge is lost. If you want to reclaim that knowledge additional communication is required to resolve the ambiguities.
+##### Real live examples
+* Separate frontend team, backend team, database team, mantainance team, (name the next one).
+* Business analysts
+* Teams working in related areas but located in different locations or worse - timezones.
+
+##### Some ideas to reduce this waste
+* Create cross-functional teams
+* Colocate related teams
+* Reduce the number of handoffs (try to look into Kanban)
+* Use best communication methods which heavily embraces fast feedback. This simply means that instead of documents the people should work together - pair programming, face to face meetings, simulations, interaction with mockups
+
+### How to fight 
 ## Inventory [Partially done work]
 ## Motion [Task switching]
 ## Waiting [Delays]
 ## Over production [Extra features]
+Did you expierenced a situation where development team decided to add something extra becouse it was just easy to do? Did you expierence a situation where business ordered a feature and didn't use it?
+I will start with a quotation that I am in love with:
  > “Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.” Antoine de Saint-Exupéry, Airman's Odyssey.
+
+I am a little bit obsessed with this. The best code is not to code at all. When there is code there are bugs, you have to mantain it, you have to write tests which are the only proof that your code is not guilty and that still is not enough. Who will tests your tests? I still love to write code but this code has to be deadly precise - like math formula.
+### Example that I've expierenced
+
 ## Over processing [Relearning]
 ## Defects [Defects]
 ## Skills [Unused talent]
