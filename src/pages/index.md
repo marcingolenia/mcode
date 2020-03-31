@@ -1,7 +1,7 @@
 ---
 templateKey: index-page
 title: Marcin Golenia blog
-image: /img/home-jumbotron.jpg
+image: /img/home-jumbotron.webp
 heading: Who are you?
 subheading: 'about software engineering, craftmanship, architecture...'
 mainpitch:

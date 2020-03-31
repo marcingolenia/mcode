@@ -7,7 +7,7 @@ description: >-
   is really easy to start with.  With some tips you may successfully survive a
   long-running project with no stress or sad expierences.
 featuredpost: false
-featuredimage: /img/dbup.png
+featuredimage: /img/dbup.webp
 tags:
   - database migrations
 ---

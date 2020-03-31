@@ -5,7 +5,7 @@ date: 2020-04-01T19:09:10.000Z
 description: >-
   Stay tuned!
 featuredpost: false
-featuredimage: /img/waste.png
+featuredimage: /img/waste.webp
 tags:
   - 'agile software development'
 ---

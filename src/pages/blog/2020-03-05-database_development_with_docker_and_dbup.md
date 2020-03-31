@@ -7,7 +7,7 @@ description: >-
   pleasant and quick database development environment without installing
   anything (besides docker of course).
 featuredpost: false
-featuredimage: /img/dbdocker.png
+featuredimage: /img/dbdocker.webp
 tags:
   - docker
   - sqlserver

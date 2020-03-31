@@ -8,7 +8,7 @@ description: >-
   simply it may help you with moving forward with some nice techy idea. After the workshop I've aquired quick feedback with
   2 x 4/5 and 2 x 5/5. It should take about 30-40 minutes (depending on few factors).
 featuredpost: false
-featuredimage: /img/team.jpg
+featuredimage: /img/team.webp
 tags:
   - 'agile software development'
 ---
