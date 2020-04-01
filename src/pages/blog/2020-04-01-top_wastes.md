@@ -41,12 +41,30 @@ Do you remember chinese whispers game (for my polish colleagues it's głuchy tel
 * Reduce the number of handoffs (try to look into Kanban)
 * Use best communication methods which heavily embraces fast feedback. This simply means that instead of documents the people should work together - pair programming, face to face meetings, simulations, interaction with mockups
 
-### How to fight 
 ## Inventory [Partially done work]
+Originally in Toyota Production System relates to excess inventory. Excess material causes longer lead time, aging,
+damage to goods, transport and storage costs, as well as delays. In addition, additional resources hide problems such as
+production imbalance [2]. In software development this relates to partialy done work. Partialy done work means that there is raw material (for example undeployed changes, unfinished places - TODOs) that waits for us (software engineers) to be taken and used to create truly done work.
+##### Real live examples
+* TODOs in code
+* Long-living feature branches
+* Undeployed code to production
+* Long waiting user stories, tasks. The longer they wait the more likely they will need to be change due to changing priorites, requirements, evolving market
+* Undocummented changes - the code should be self-documenting but you still should keep your project vocabulary or domain-model diagrams up to date
+* Untested code. Writing code without a way to detect defect immediately is the fastest way to build up an inventory of partially done work [3]
+
+##### Some ideas to reduce this waste
+* Don't leave TODOs in code. Do it or don't. If something is important but can wait then create new task in Jira (or whatever else you use)
+* Use trunk-based development
+* Invest in Continous Integration, Continous Deployment
+* Try to divide work into smallest possible batches. Dealing with small increments is obviously easier
+* Include domain-models updates, glossary updates etc in your team definition of done
+* Advocate for TDD, teach why writing tests is important and how it influences productivity
+
 ## Motion [Task switching]
 ## Waiting [Delays]
 ## Over production [Extra features]
-Did you expierenced a situation where development team decided to add something extra becouse it was just easy to do? Did you expierence a situation where business ordered a feature and didn't use it?
+Did you expierenced a situation in which development team decided to add something extra becouse it was just easy to do? Did you expierence a situation where business ordered a feature and didn't use it for very long time (or even not at all)?
 I will start with a quotation that I am in love with:
  > “Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.” Antoine de Saint-Exupéry, Airman's Odyssey.
 
@@ -58,7 +76,7 @@ I am a little bit obsessed with this. The best code is not to code at all. When 
 ## Skills [Unused talent]
 
 ## Summary
-I toched only the tip of the iceberg. Applying lean in software development can be a powerful technique and works extremely well with agile software development manifesto. I hope I inspired you to start fighting waste symptoms that you already have in mind. You can start with waste and then look into quality, value, speed, knowledge, people. To help you with that I really recommend the referenced books - you won't regret reading them.
+I toched only the tip of the iceberg. Applying lean in software development can be a powerful technique and works extremely well with agile software development manifesto. I hope I inspired you to start fighting waste symptoms that you already have in mind. You can start with waste and then look into quality, value, speed, knowledge, people. To help you with that I really recommend the referenced books - you won't regret reading them. 
 
 ---
 <small>
