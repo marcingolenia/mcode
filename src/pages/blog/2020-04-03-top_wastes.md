@@ -1,7 +1,7 @@
 ---
 templateKey: blog-post
 title: 'Top wastes in sofware production'
-date: 2020-04-01T19:09:10.000Z
+date: 2020-04-03T01:00:10.000Z
 description: >-
   We are just people - continous work in focus for 8 hours is not something we are capable of. We have to make short breaks, socialize, drink coffee. Don not worry you are not causing any wastes or... or do you? If you do, it is not because of short break or coffee. I will tell you who should be blamed for the wase in your company - its Tim Woods! (The article is inspired by Lean production also known as Toyota Production System).
 featuredpost: false
