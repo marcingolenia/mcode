@@ -57,8 +57,7 @@ Do you remember chinese whispers game (for my polish colleagues it is głuchy te
 
 ## 2. Inventory \[Partially done work]
 
-Originally in Toyota Production System relates to excess inventory. Excess material causes longer lead time, aging, damage to goods, transport and storage costs, as well as delays. In addition, additional resources hide problems such as
-production imbalance \[2]. In software development this relates to partialy done work. Partialy done work means that there is raw material (for example undeployed changes, unfinished places - TODOs) that waits for us (software engineers) to be taken and used to create truly done work.
+Originally in Toyota Production System relates to excess inventory. Excess material causes longer lead time, aging, damage to goods, transport and storage costs, as well as delays. In addition, additional resources hide problems such as production imbalance \[2]. In software development this relates to partialy done work. Partialy done work means that there is raw material (for example undeployed changes, unfinished places - TODOs) that waits for us (software engineers) to be taken and used to create truly done work.
 
 ##### Real live examples
 
@@ -139,7 +138,7 @@ Did you expierenced a situation in which development team decided to add somethi
 
 ## 6. Over processing \[Relearning]
 
-Let me start with original Lean waste - Overprocessing or incorrect processing whish is taking unneeded steps to process the parts. Inefficiently processing due to poor tool and product design, causing unnecessary motion and producing defects \[2]. This can be related to writing to much code. I am a little bit obsessed with this. The best code is not to code at all. When there is code there are bugs, you have to maintain it, you have to write tests which are the only proof that your code is not guilty and that still is not enough. Who will tests your tests? I still love to write code but it has to be precise, concise, exact - more like math formula. Last but not least consider my beloved quatation:
+Let me start with original Lean waste - Overprocessing or incorrect processing is taking unneeded steps to process the parts. Inefficiently processing due to poor tool and product design, causing unnecessary motion and producing defects \[2]. This can be related to writing to much code. I am a little bit obsessed with this. The best code is not to code at all. When there is code there are bugs, you have to maintain it, you have to write tests which are the only proof that your code is not guilty and that still is not enough. Who will tests your tests? I still love to write code but it has to be precise, concise, exact - more like math formula. Last but not least consider my beloved quatation:
 
 > “Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.” - Antoine de Saint-Exupéry, Airman's Odyssey.
 
