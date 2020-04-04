@@ -1,11 +1,13 @@
 module.exports = {
   siteMetadata: {
-    title: 'Martins\'s Golenia Blog',
+    title: 'Marcin Golenia Blog',
+    siteUrl: 'https://mcode.it',
     description:
       '',
   },
   plugins: [
     'gatsby-plugin-react-helmet',
+    'gatsby-plugin-sitemap',
     'gatsby-plugin-sass',
     {
       // keep as first gatsby-source-filesystem plugin for gatsby image support
