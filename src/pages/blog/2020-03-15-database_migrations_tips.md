@@ -73,10 +73,10 @@ Create.ForeignKey(foreignKeyName: "FK_Clients_To_Departments")
 
 This can be tempting because it's C# - the language you love but there are 2 drawbacks: 
 
-1. This is really verbrose - try to write it in SQL.
-2. After few months you will come to a funny and sad situtation asking yourself a question:
+1. This is really verbose - try to write it in SQL.
+2. After a few months you will come to a funny and sad situtation asking yourself a question:
 
-   > Damn! What was syntax in pure SQL to create foreign key? 
+   > Damn! What was syntax in pure SQL to create a foreign key? 
 
 This happened to me and I also got similar feedback from my friend. 
 
@@ -88,13 +88,13 @@ There are some cool tools in Azure like automatic tuning that can do *create ind
 
 ## 6. Use the migrator of your choice to deploy your database everywhere
 
-This is really bad. I have met one team once that was writing EF migrations but they were not allowed to use it in production. Some kind of Db Emperor was taking their database from the UAT environment and then he generated the mighty change script. When you are an Emperor of the DB kingom you can of course do much more than that! Apply additional indexes, drop some `NOT NULL` constraints... Easy to guess - the team was struggling with bugs from production that couldn't be easily (or not at all) replicated in their environment. 
+This is really bad. I have met one team once that was writing EF migrations but they were not allowed to use it in production. Some kind of Db Emperor was taking their database from the UAT environment and then he generated the mighty change script. When you are an Emperor of the DB kingdom you can of course do much more than that! Apply additional indexes, drop some `NOT NULL` constraints... Easy to guess - the team was struggling with bugs from production that couldn't be easily (or not at all) replicated in their environment. 
 
 Once you decide to use migrations - use them starting from your local machine and ending on production.
 
 ## 7. Don't waste your time on writing Down migrations
 
-I had been doing this for long time. Trust me - it's not worth it. I didn't run down migration even once in my life in production.  There is interesting [discussion about down migrations on dbup github issues](https://github.com/DbUp/DbUp/issues/42) - check it out. I fully agree with some people there saying that writing down migrations is a big overhead for the team and mostly it will be faster to just rollup a bugfix or in the worst case restore a backup.
+I had been doing this for long time. Trust me - it's not worth it. I didn't run down migration even once in my life in production.  There is a interesting [discussion about down migrations on dbup github issues](https://github.com/DbUp/DbUp/issues/42) - check it out. I fully agree with some people there saying that writing down migrations is a big overhead for the team and mostly it will be faster to just rollup a bugfix or in the worst case restore a backup.
 
 ## 8. Migrations on application startup are a bad idea
 
@@ -128,8 +128,8 @@ IF NOT EXISTS (
 )
 ```
 
-and so on. The migrator tracks scripts that have already been executed, but when your have idempotence you can easily switch from one migrator to other one (being specific-tool independent is good practice). Just move the migrations-scripts to new project and execute. 
+and so on. The migrator tracks scripts that have already been executed, but when your have idempotence you can easily switch from one migrator to other one (being specific-tool independent is good practice). Just move the migrations-scripts to a new project and execute. 
 
 ## Summary
 
-I hope that this tips will make your life easier. With some extra awerness while writing database migration you can save some mistakes that I had been making. Good luck!
+I hope that this tips will make your life easier. With some extra awareness while writing database migration you can save some mistakes that I had been making. Good luck!
