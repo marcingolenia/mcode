@@ -312,7 +312,7 @@ printfn "%A" deck
 ```
 If you want to know a little bit more about types and modeling in F# quickly I advise you to watch a talk by Scott Wlashin about it [8].
 
-### 3.6 Type inference and automatic generalization
+### 3.4 Type inference and automatic generalization
 F# is a strongly typed language with automatic generalization. Consider the following function: 
 ```fsharp
 let addToListIfNotThere list item =
