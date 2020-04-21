@@ -320,7 +320,7 @@ let addToListIfNotThere list item =
         | true -> list
         | _ -> item :: list
 ```
-But where are the types? The function signature is `val addToListIfNotThere : list:'a list -> item:'a -> 'a list when 'a : equality`. If you are not familiar with this notation it simply means that addToListIfNotThere is a function that takes a list of any type ('a) and an item of any type and returns a list of any type. The last arrow `->` tells us about the return type of the function, all arrows before are input parameters of each curried function [3]. In many languages, you have to start playing with additional syntax related to generics to have this functionality. Let us change the implementation of the function to check if the item is greater than 0:
+But where are the types? The function signature is `val addToListIfNotThere : list:'a list -> item:'a -> 'a list when 'a : equality`. If you are not familiar with this notation it simply means that addToListIfNotThere is a function that takes a list of any type ('a) and an item of any type and returns a list of any type. The last arrow `->` tells us about the return type of the function, all arrows before are input parameters of each curried function. In many languages, you have to start playing with additional syntax related to generics to have this functionality. Let us change the implementation of the function to check if the item is greater than 0:
 ```fsharp
 let addToListIfNotThereAndGt0 list item =
     match (list |> Seq.contains item) with
