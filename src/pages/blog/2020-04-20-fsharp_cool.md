@@ -17,8 +17,8 @@ Most of the Fsharpers are Csharpers first. Let me write about C# a little bit. L
 * Nullable ref types - we have Records since 2005. So old...
 * Asynchronous streams - we have it for 5 years already
 * Default interface methods - you don't need them in functional programming
-* Nullable reference types - there is no null in F#. F# won by 15 years
-* Null-coalescing assignment - no null in F#
+* Nullable reference types - It is not that easy to use null in F#, so usually we don't do this (only when working at edges with .net libraries). We have the option type. F# won by 15 years
+* Null-coalescing assignment - You shouldn't need this in F#. When working with .net libraries you can define this operator by yourself easily.
 
 C# 8.0 is with us for some time already isn't it? I have not seen any confirmed features of C# 9.0 but the rumors are saying... Records! We have them for 15 years in F#. People are writing about discards in lambda (boring), or improved pattern matching (can you beat F#? I don't think so), yield expression - yes, yes F# has it.
 Let's put the sarcasm aside. Don't get me wrong I still love C# but do you see where it is going? Isn't it functional programming the future? 
