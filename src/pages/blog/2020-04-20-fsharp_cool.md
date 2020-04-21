@@ -3,7 +3,7 @@ templateKey: blog-post
 title: 'Few snippets that prove F# COOLNESS'
 date: 2020-04-20T23:20:10.000Z
 description: >-
-  There's a legend around F# that the language is good for science, academic stuff (yes it is good for this as well but not only). Most people think that functional languages are complicated and thus will make them not productive. Nonsense! Let me introduce you to some cool F# features that can make you more productive. You can put away difficult things into the future, meanwhile use F# to write correct and concise code and create bullet-proof cool apps! Let me start with F# justification as modern language then some functional programming evangelism, after that I will give you some F# selling points.
+  There's a legend around F# that the language is good for science, academic stuff (yes it is good for this as well but not only). Most people think that functional languages are complicated and thus will make them not productive. Nonsense! Let me introduce you to some cool F# features that can make you more productive. You can put away difficult things into the future, meanwhile use F# to write correct and concise code and create bullet-proof cool apps! Let me start with F# justification as a modern language then some functional programming evangelism, after that I will give you some F# selling points.
 featuredpost: true
 featuredimage: /img/fsharp.webp
 tags:
@@ -37,7 +37,7 @@ If you create software for more than 3 years I am sure you nod your head looking
 However, functional programming is all about implementing behaviors, that are independent of the data passed into them. In languages like Haskell or F# it's extra easy to create types, so you focus on types and behaviors - this simply means that functional programming encourages good modeling (over time, you can model better without even being aware that you are doing it better). On top of that let me give you one quotation:
 > object-oriented programming is an exceptionally bad idea which could only have originated in California. - <i>Edsger Dijkstra</i>
 
-If you don't mind a little bit of history let me mention that in 2001, Edsger W. Dijkstra wrote a letter to the Budget Council of The University of Texas about functional programming (Haskell in this case) when they wanted to replace the course we Java [4]. I am not in the opinion that OO is bad, it's good - you can do awesome apps that way, model many domains. I am in the opinion that the functional paradigm is underestimated.
+If you don't mind a little bit of history let me mention that in 2001, Edsger W. Dijkstra wrote a letter to the Budget Council of The University of Texas about functional programming (Haskell in this case) when they wanted to replace the course with Java [4]. I am not in the opinion that OO is bad, it's good - you can do awesome apps that way, model many domains. I am in the opinion that the functional paradigm is underestimated.
 
 ### 2.2 SOLID and functional programming
 SOLID is a set of universal values and yes I am aware that Wikipedia says that this is OO principle but even the creator of the acronym says:
@@ -53,7 +53,7 @@ That was a long foreword. Let's take a look at some great features that F# has. 
 Type provider is simply an adapter that loads data respecting its schema and then turns this data and schema into types of target programming language. These types can be used by compiler and IntelliSense. Let me give you three examples.
 
 #### World Bank Data
-[World Bank Data](https://data.worldbank.org/) is free and open access to global development data that contains many indicators related to poverty and inequality, health, environment, economy and more. F# Type provider makes it easy to do some research about the world. What about charting CO2 emissions of Poland? 
+[World Bank Data](https://data.worldbank.org/) is free and open access to global development data that contains many indicators related to poverty and inequality, health, environment, economy and more. F# Type provider makes it easy to do some research about the world. What about charting the CO2 emissions of Poland? 
 
 ```fsharp
 #r "nuget: XPlot.GoogleCharts"
@@ -149,7 +149,7 @@ let pokemonMoves = getPokemon "psyduck" |> Async.RunSynchronously
 this is a trivial example but in more side-effects driven asynchronous workflow it may save the day.
 
 ### Html type provider 
-That one enables you to parse HTML documents in type-safe way. Let me give an example from [4] which made me say "woaaahh" once I executed it.
+That one enables you to parse HTML documents in a type-safe way. Let me give an example from [4] which made me say "woaaahh" once I executed it.
 ```fsharp
 #r "nuget: Fsharp.Data"
 
