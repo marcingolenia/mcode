@@ -13,6 +13,7 @@ featuredpost: false
 featuredimage: /img/team.webp
 tags:
   - agile software development
+  - lean
 ---
 ## 1. Motivation
 How I get into the idea of the workshop? First of all let me remind you 3 of 12 princples from <a href="https://agilemanifesto.org/principles.html" target="_blank">agile manifesto</a>.
