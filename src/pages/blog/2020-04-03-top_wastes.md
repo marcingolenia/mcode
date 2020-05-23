@@ -9,10 +9,11 @@ description: >-
   because of a short break or coffee. I will tell you who should be blamed for the
   wase in your company - its Tim Woods! (The article is inspired by the Lean
   production which is also known as Toyota Production System).
-featuredpost: true
+featuredpost: false
 featuredimage: /img/waste.webp
 tags:
   - agile software development
+  - lean
 ---
 ## Who the hell is Tim Woods?
 

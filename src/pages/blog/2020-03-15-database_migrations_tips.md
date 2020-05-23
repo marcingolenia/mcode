@@ -13,7 +13,7 @@ tags:
 ---
 ## 1. Make sure that you will not lost the data
 
-Imagine that you store user password in database as plain string (just imagine don't do). Now the time has come to fix this let's say strange situation. So you want to md5 hash the passwords. You prepare the migration script, update app code and run everyting. Boom - something crashed in the app so you quickly have to restore previous version so the company can still make money on their clients. Unfortunatelly... the passwords are hashed and there is no way back. You have just caused bigger delay than you should (probably you have to restore a backup and loose fresh data or fix the bug in the app and make everyone wait). In such cases please:
+Imagine that you store user password in the database as a plain string (just imagine don't do). Now the time has come to fix this let's say strange situation. So you want to md5 hash the passwords. You prepare the migration script, update the codebase and run everything. Boom - something crashed in the app so you quickly have to restore the previous version so the company can still make money on their clients. Unfortunately... the passwords are hashed and there is no way back. You have just caused a bigger delay than you should (probably you have to restore a backup and loose fresh data or fix the bug in the app and make everyone wait). In such cases please:
 
 1. Prepare a migration script that extends the table with one column more and keep the old one
 2. Update the application code
@@ -24,7 +24,7 @@ This may mean that they won't refuse you next salary raise.
 
 ## 2. Don't modify or delete your scripts
 
-I had been doing this in the past. The database schema was getting more and more complicated so I thought it might be a brilliant idea to aggregate some migrations. For example - we can give up adding columns somewhere later in migrations for extending the main migration that creates the table. This requires modifications in the Versions table done by hand in production. This may work but you do put yourself into unnecessary risk. You won't gain much - there are less files with migrations but does this help you somehow? You don't have to mantain them, modify. All you have to do is to introduce new transition from state A to state B. If the amount of files is annoying you just put them into a directory (for example with the name of the year - 2019, 2020 etc).
+I had been doing this in the past. The database schema was getting more and more complicated so I thought it might be a brilliant idea to aggregate some migrations. For example - we can give up adding columns somewhere later in migrations for extending the main migration that creates the table. This requires modifications in the Versions table done by hand in production. This may work but you do put yourself into unnecessary risk. You won't gain much - there are less files with migrations but does this help you somehow? You don't have to maintain them, modify. All you have to do is to introduce a new transition from state A to state B. If the amount of files is annoying you just put them into a directory (for example with the name of the year - 2019, 2020, etc).
 
 ## 3. Use timestamps for versioning
 
@@ -33,7 +33,7 @@ A common naming pattern I see for migration naming is a sequential integer + des
 * 1-AddCustomersTable.sql
 * 2-AddOrdersTable.sql
 
-This works fine if you are 1-member team (or 2). In bigger teams sooner or later this will end up like this:
+This works fine if you are a 1-member team (or 2). In bigger teams sooner or later this will end up like this:
 
 * 1-AddCustomersTable.sql
 * 2-AddOrdersTable.sql
@@ -74,7 +74,7 @@ Create.ForeignKey(foreignKeyName: "FK_Clients_To_Departments")
 This can be tempting because it's C# - the language you love but there are 2 drawbacks: 
 
 1. This is really verbose - try to write it in SQL.
-2. After a few months you will come to a funny and sad situtation asking yourself a question:
+2. After a few months you will come to a funny and sad situation asking yourself a question:
 
    > Damn! What was syntax in pure SQL to create a foreign key? 
 
@@ -84,7 +84,7 @@ And finally there is one important question: Isn't it SQL being the best DSL for
 
 ## 5. Don't do database changes outside your migrator
 
-There are some cool tools in Azure like automatic tuning that can do *create index recommendations* and much more. This is really tempting to just click *apply* and have some optimizations. Coold down however... remember that you won't have this change on other environments! Examine the recommandation, copy the suggested SQL and introduce the changes using migrations. Step by step try to mimic your production environment as much as it is possible.
+There are some cool tools in Azure like automatic tuning that can do *create index recommendations* and much more. This is tempting to just click *apply* and have some optimizations. Cool down however... remember that you won't have this change on other environments! Examine the recommendation copy the suggested SQL and introduce the changes using migrations. Step by step try to mimic your production environment as much as it is possible.
 
 ## 6. Use the migrator of your choice to deploy your database everywhere
 
@@ -100,14 +100,14 @@ I had been doing this for long time. Trust me - it's not worth it. I didn't run 
 
 Unfortunately this is something really common in .Net people that are fans of EntityFramework. Your application is the application that solves business problems (mostly) thus shouldn't deal with database schema and will tell you why:
 
-* Security reason. Your application database user shouldn't have rights to create/drop database object (unless you are doing something extra specific - in most cases you don't). Read/Write should be enough. 
-* Scaling - Imagine you want to deploy your app in 5 instances. Now you have to deal with 5 processes concurently running migrations into one database instead of one. Good luck.
+* Security reason. Your application database user shouldn't have the right to create/drop database object (unless you are doing something extra specific - in most cases you don't). Read/Write should be enough. 
+* Scaling - Imagine you want to deploy your app in 5 instances. Now you have to deal with 5 processes concurrently running migrations into one database instead of one. Good luck.
 * You will be able to deploy you app with migrations that can't be executed properly. This will simply bring the application down. When the migrations are separated you can first deploy migrations and if this step was successful then the app. You can ignore those errors on app startup but this is a way to loose control.
-* You will introduce mental coupling. After some time everyone will asume that the new code only runs with newest database schema. This can be harmful when you want to consider blue/green deploy or canary releases. In this approaches your app shoul be able to work with older schema version.
+* You will introduce mental coupling. After some time everyone will assume that the new code only runs with the newest database schema. This can be harmful when you want to consider blue/green deploy or canary releases. In this approaches your app should be able to work with the older schema version.
 
 ## 9. Dockerize your migrations
 
-It's not something necessary but this can increase your productivity. [Check my post on how to do it with postgres and dbup](../2020-03-05-database_development_with_docker_and_dbup) (but doing this with other relational dbs should be similar).
+It's not something necessary but this can increase your productivity. [Check my post on how to do it with postgres and dbup](../2020-03-05-database_development_with_docker_and_dbup) (but doing this with other relational databases should be similar).
 
 ## 10. Don't be afraid to talk about migrations with business representatives
 
@@ -128,8 +128,8 @@ IF NOT EXISTS (
 )
 ```
 
-and so on. The migrator tracks scripts that have already been executed, but when your have idempotence you can easily switch from one migrator to other one (being specific-tool independent is good practice). Just move the migrations-scripts to a new project and execute. 
+and so on. The migrator tracks scripts that have already been executed, but when your have idempotence you can easily switch from one migrator to the other one (being specific-tool independent is good practice). Just move the migrations-scripts to a new project then execute. 
 
 ## Summary
 
-I hope that this tips will make your life easier. With some extra awareness while writing database migration you can save some mistakes that I had been making. Good luck!
+I hope that these tips will make your life easier. With some extra awareness while writing database migration you can save some mistakes that I had been making. Good luck!
