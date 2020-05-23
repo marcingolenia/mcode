@@ -1,7 +1,7 @@
 ---
 templateKey: blog-post
 title: 'Technology Radar as a knowledge and communication'
-date: 2020-05-12T23:20:10.000Z
+date: 2020-05-23T23:20:10.000Z
 description: >-
   Radar is a system that uses radio waves to find the position and movement of objects, for example, planes and ships, when they cannot be seen. Analogously Technology radar "uses" engineers and built systems to find the position and movement of languages, platforms, tools, and techniques in trends. In this post I will describe the radar as an actual need in the company and prove its value from a lean perspective.
 featuredpost: true
