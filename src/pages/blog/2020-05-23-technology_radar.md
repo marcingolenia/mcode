@@ -65,6 +65,9 @@ My advice is to start with a simple radar. Once you will feel overwhelmed by new
 ### Technologies and shapes
 Use the shapes you like on the radar but also make use of them. ThoughtWorks marks new things with up-triangles to mark new things on the radar. I would also use down-triangles to mark something that I thought will be valuable for the company (**Asses**) but after some experimentation, it turned out that it won't play well with our skillset/attitude/values whatever so I will put it to **Hold** to keep an eye on it and look for some more feedback within or outside the company. Remember! It is still not **Reject**, reject don't exist.
 
+#### Descriptions
+Descriptions are missing in the drawings but you should add them. This might be a brief simple description of the technology/tool/technique with some links (even link to POC repository) and explanations on why particular dot is in particular ring. It's nothing big I think that ThoughtWorks did a good job with descriptions you can take an example from them.
+
 ## 4. Radar in the light of Lean
 Technology radar can be proved to be a great tool for most of the IT companies. Let's take some lean rules and practices which were proved to be valuable by Toyota and successfully described in a software development context in *Implementing Lean Software Development From Concept to Cash* [8] and which I find to work well with the radar.
 
