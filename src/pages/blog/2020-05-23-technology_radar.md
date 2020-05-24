@@ -26,7 +26,7 @@ I also proposed that the CTO can talk about the architecture with the teams dire
 After a while I have a chat with my friend about the whole situation and I've mentioned technology radar. It turned out he didn't know this concept when I gave some explanations he gave an idea that this could fulfill the whole "track" need of the CTO - he could be sure by looking on the radar that no one will adopt a technology which can cost the company a lot of money or cause troubles from any reason. That made me think... As a result I dived more into the topic. I decided to share with you what I have found and concluded putting the radar in the light of Lean - maybe you will be in a similar situation and with this blog post you will handle the situation better than me. That being said... I hope I will counterattack in the coming days.
 
 ## 2. Brief History of Technology Radar
-In 2008 Daren Smith (General Manager at Thought Works) joined the Technology Advisory Board (TAB) [9]. TAB at Thought works is responsible for identifying trends in technology and help the company properly respond to the trends by communicating to the consultants what they should learn or focus when helping salespeople to understand some of them. To prepare well for the role he examined notes from previous meetings. He tried to classify the technologies and then;
+In 2008 Daren Smith (General Manager at Thought Works) joined the Technology Advisory Board (TAB) [1]. TAB at Thought works is responsible for identifying trends in technology and help the company properly respond to the trends by communicating to the consultants what they should learn or focus when helping salespeople to understand some of them. To prepare well for the role he examined notes from previous meetings. He tried to classify the technologies and then;
 > The image of radar was what came immediately to mind.
 
 So it began. Daren presented the idea of radar on the TAB meeting. They worked on it a little bit and started to use it. The initial version was in the form of one radar, later quartiles were added because the number of technologies made it hard to reason about. The first publically available version was published in 2010. Each year new radar is being published mostly 2 times up to now. You can go to the ThoughtWorks webpage and examine all radars [3]. If you are more interested in the history Daren published the whole article about it [4].
@@ -76,7 +76,7 @@ Nemawashi can be translated to "Building a consensus" which is the first step in
 
 To make Nemewashi even more effective we can build consensus on different levels. Before we introduce the idea before a broad audience we may try to discuss it with a "friendly team" and gain their insight and probably their support.
 #### Genchi genbutsu
-Genchi genbutsu is extremely straightforward - go and see yourself. Technology radar will enforce on decision triggering people to make their hands dirty to have some proofs and a ready list of pros and cons. If not then they should fail on building consensus (Nemewashi). I love the connection between Nemewashi and Genchi genbutsu as this hits directly the kind of architects that I hate: non-coding architects. 
+Genchi genbutsu is extremely straightforward - go and see yourself. Technology radar will enforce on decision triggering people to make their hands dirty to have some proofs and a ready list of pros and cons. If not then they should fail on building consensus (Nemewashi). I love the connection between Nemewashi and Genchi genbutsu as this hits directly the bad practice known as "non-coding architect".
 
 The other side of genchi genbutsu in the light of technology radar is that even if a person will make some valid points baked with research and POC but the actual use of the technology (*Trial*) will turn out to not work well in the real project the person for sure will be informed at the latest on next technology radar meeting that it simply didn't work well in given context. The person should see why and learn from it - do the Hansei (do the reflection).
 
@@ -145,14 +145,14 @@ Notice that ThoughtWorks and other companies had the radar for internal use firs
 <small>
 <b>Footnotes:</b>
 
-[9] I like the name - mainly because it does not have *architecture* word in there. Its purpose is rather clear - *Advision* but still, some questions remain. However the **transparent** artifact (radar) that the organizational unit created hits the jackpot. <br/>
-<b>References:</b>
-
-[1] *Developer Hegemony*, Eric Dietrich.<br/>
-[2] *Extreme Programming*, Kent Beck.<br/>
+[1] I like the name - mainly because it does not have *architecture* word in there. Its purpose is rather clear - *Advision* but still, some questions remain. However the **transparent** artifact (radar) that the organizational unit created hits the jackpot. <br/>
+<br/><b>References:</b><br/>
+Websites:<br/>
 [3] *[ThoughtWorks Technology Radar](https://www.thoughtworks.com/radar)*<br/>
-[4] *[ThoughtWorks Blog on technology radar birth](https://www.thoughtworks.com/insights/blog/birth-technology-radar).*<br/>
-[5] *The Toyota Way - 14 Management Principles From The World'S Greatest Manufacturer*, Jeffrey Liker.<br/>
-[6] *Accelerate: Building and Scaling High-Performing Technology Organizations*, Nicole Forsgren, Jez Humble, Gene Kim.<br/>
-[7] *5 Pillars of the Visual Workplace: The Sourcebook for 5S Implementation*, Hirano, Hiroyuki. <br/>
-[8] *Implementing Lean Software Development From Concept to Cash*, Mary and Tom Poppendieck
+[4] *[ThoughtWorks Blog on technology radar birth](https://www.thoughtworks.com/insights/blog/birth-technology-radar)*<br/>
+Books:<br/>
+[2] *[Extreme Programming](https://www.goodreads.com/book/show/67833.Extreme_Programming_Explained)*, Kent Beck.<br/>
+[5] *[The Toyota Way - 14 Management Principles From The World'S Greatest Manufacturer](https://www.goodreads.com/book/show/161789.The_Toyota_Way)*, Jeffrey Liker.<br/>
+[6] *[Accelerate: Building and Scaling High-Performing Technology Organizations](https://www.goodreads.com/book/show/35747076-accelerate?ac=1&from_search=true&qid=rC9HOG8xvZ&rank=5)*, Nicole Forsgren, Jez Humble, Gene Kim.<br/>
+[7] *[5 Pillars of the Visual Workplace: The Sourcebook for 5S Implementation](https://www.goodreads.com/book/show/2105679.5_Pillars_of_the_Visual_Workplace?ac=1&from_search=true&qid=EvA4eUTK73&rank=1)*, Hirano, Hiroyuki. <br/>
+[8] *[Implementing Lean Software Development From Concept to Cash](https://www.goodreads.com/book/show/349417.Implementing_Lean_Software_Development?ac=1&from_search=true&qid=6KGlL92tlf&rank=1)*, Mary and Tom Poppendieck
