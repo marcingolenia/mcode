@@ -84,6 +84,12 @@ module.exports = {
       },
     },
     {
+      resolve: `gatsby-plugin-canonical-urls`,
+      options: {
+        siteUrl: `https://mcode.it`,
+      },
+    },
+    {
       resolve: "gatsby-plugin-page-progress",
       options: {
         height: 3,
