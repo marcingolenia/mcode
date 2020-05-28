@@ -16,9 +16,11 @@ const EmailForm = () => {
       if(data.result != 'error') {
         navigate(form.getAttribute('action'));
       }
+      else {
       var msg = data.msg.replace(/<[^>]*>?/gm, '');
       msg = msg.replace('Click here to update your profile', '');
       setSubscriptionResult(msg);
+      }
     })
   };
 
