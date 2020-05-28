@@ -40,10 +40,12 @@ export default class Index extends React.Component {
           <div className="container">
             <div className="content">
               <h1>Contact</h1>
+              <p>Feel free to reach me. If you prefer you can find my email on my GitHub account.</p>
               <form
+                className="SubscribeForm"
                 name="contact"
                 method="post"
-                action="/contact/thanks/"
+                action="/thanks/"
                 data-netlify="true"
                 data-netlify-honeypot="bot-field"
                 onSubmit={this.handleSubmit}
