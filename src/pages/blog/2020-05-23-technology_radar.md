@@ -136,7 +136,7 @@ I strongly believe that properly running a technology radar creates effective co
 
 > Most C-level types get more advice from salespeople than their employees. Why? First, no one wants feedback that they think may be negative, especially when they can make it optional. - *Neal Ford, Director, and Architect at ThoughtWorks*
 
-Does this apply to your CTO? It does for mine. Let's force them to be part of our feedback loop.
+Does this apply to your CTO? Think about it. Let's force them to be part of our feedback loop.
 
 Notice that ThoughtWorks and other companies had the radar for internal use first. That is something we should understand - there is no silver bullet - one technology can be something to **Adopt** in one context and **Hold** in another context. If you already looked into the ThoughtWorks radar you have an answer why the **Adopt** part is so small numbered. Even if the dots are in the adopt ring remember - ThoughtWorks have also their projects scope limited. Look for inspirations with other companies but always put your needs first.
 
