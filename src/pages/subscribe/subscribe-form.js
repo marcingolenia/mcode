@@ -41,7 +41,7 @@ const EmailForm = () => {
           <button type="submit">Subscribe</button>
         </div>
       </form>
-      <b>{subscriptionResult}</b>
+      <b style={{color:'red'}}>{subscriptionResult}</b>
     </Fragment>
   );
 };
