@@ -84,6 +84,18 @@ module.exports = {
       },
     },
     {
+      resolve: 'gatsby-plugin-mailchimp',
+      options: {
+        endpoint: 'https://mcode.us10.list-manage.com/subscribe/post?u=dc854e01a6e78cfcccd3bb1e3&amp;id=c9990cabfa',
+      },
+    },
+    {
+      resolve: `gatsby-plugin-canonical-urls`,
+      options: {
+        siteUrl: `https://mcode.it`,
+      },
+    },
+    {
       resolve: "gatsby-plugin-page-progress",
       options: {
         height: 3,
