@@ -27,7 +27,7 @@ const Footer = class extends React.Component {
             </a>
           </div>
         </div>
-        <small>© 2020 MCode Marcin Golenia. All Right Reserved.</small> 
+        <small>© 2020 Marcin Golenia. All Right Reserved.</small> 
       </footer>
     )
   }
