@@ -1,7 +1,7 @@
 ---
 templateKey: blog-post
-title: 'Make F# play nice with C# - how we to compose dependencies while hosting with C#.'
-date: 2020-05-29T23:20:10.000Z
+title: 'Make F# play nice with C# - how we to compose dependencies while hosting with C#'
+date: 2020-06-14T21:44:10.000Z
 description: >-
    F# is a nice functional alternative in .NET. I have convinced my teammates to use F# in our project at my work in a small new accounting bounded context that would be hosted by .NET Core C# host and Autofac based composition root. We already have a small F# based azure-function which has been a warm-welcomed area to extend/introduce changes so why not take F# to the next level? If you are looking for some hints how to deal with F# and C# in one solution this is a must-read.
 featuredpost: true
