@@ -1,9 +1,17 @@
 ---
 templateKey: blog-post
-title: 'Make F# play nice with C# - how we to compose dependencies while hosting with C#'
+title: >-
+  Make F# play nice with C# - how to compose dependencies while hosting with C#
+  project
 date: 2020-06-14T21:44:10.000Z
 description: >-
-   F# is a nice functional alternative in .NET. I have convinced my teammates to use F# in our project at my work in a small new accounting bounded context that would be hosted by .NET Core C# host and Autofac based composition root. We already have a small F# based azure-function which has been a warm-welcomed area to extend/introduce changes so why not take F# to the next level? If you are looking for some hints how to deal with F# and C# in one solution this is a must-read.
+  F# is a nice functional alternative in .NET. I have convinced my teammates to
+  use F# in our project at my work in a small new accounting bounded context
+  that would be hosted by .NET Core C# host and Autofac based composition root.
+  We already have a small F# based azure-function which has been a warm-welcomed
+  area to extend/introduce changes so why not take F# to the next level? If you
+  are looking for some hints how to deal with F# and C# in one solution this is
+  a must-read.
 featuredpost: true
 featuredimage: /img/cf.png
 tags:
@@ -233,7 +241,7 @@ Now we can complete the composition:
             return () => CloseReportingPeriodFlow.closeReportingPeriod(io).StartAsDefaultTask();
         }
 ```
-This is extremely easy to register, I have used named paramater because registering ``Func<Task>`` type seems to ask for errors. This causes some more code but nothing extraordinary:
+This is extremely easy to register, I have used named parameter because registering ``Func<Task>`` type seems to ask for errors. This causes some more code but nothing extraordinary:
 ```csharp
 var closeReportingPeriodParam = new ResolvedParameter(
     (paramInfo, ctx) => paramInfo.ParameterType == typeof(Func<Task>),
@@ -306,7 +314,7 @@ First let me show you the EventDispatcher:
         }
     }
 ```
-It simply asks autofac to resolve handlers based on event type. A class must then implement this inteface: 
+It simply asks autofac to resolve handlers based on event type. A class must then implement this interface: 
 ```csharp
 public interface EventHandler<in T> where T : Event
 {
@@ -392,7 +400,7 @@ to [Marcin Sikroski](http://marcinlovescode.com/) who supported me on the task. 
 <small>
 <b>Footnotes:</b><br/>
 [2] The discussion at the bottom of the blog post is very very interesting! Check it out as well. Mark and readers discuss putting to much responsibility to controller.<br/>
-[3] I believe that Microsoft stole a useful name. Not so long time ago I was using name Controller in Application layer as well but everyone was surprised - calling Controller from Controller? I convinced my colleagues by asking what is wrong with that? We have something that controls the flow of the HTTP requests and something that controls the flow of our application. We have found consensus in renaming "our" controller to something else. I find that "UseCase" or "Flow" is also fine - I tend to use the second now because it is short.
+[3] I believe that Microsoft stole a useful name. Not so long time ago I was using name Controller in Application layer as well but everyone was surprised - calling Controller from Controller? I convinced my colleagues by asking what is wrong with that? We have something that controls the flow of the HTTP requests and something that controls the flow of our application. We have found consensus in renaming "our" controller to something else. I find that "UseCase" or "Flow" is also fine - I tend to use the second now because it is simply shorter.
 <br/><b>References:</b><br/>
 Websites:<br/>
 
