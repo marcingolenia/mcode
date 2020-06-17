@@ -28,7 +28,7 @@ If F# is .Net and if C# is .Net then what possibly could go wrong? People are sa
 * FSharpAsync in C#
 * FSharpFunc in C#
 * FSharpTuple in C#
-then yes, this is easy. But I didn't want to start doing this...this... heresy? The first version of my F# and C# integration like this: the domain layer looked like in F#-only solution, but the application layer was not so cool... After staring at this code for a few hours:
+then yes, this is easy. But I didn't want to start doing this...this... heresy? The first version of my F# and C# integration was like this: the domain layer looked like in F#-only solution, but the application layer was not so cool... After staring at this code for a few hours:
 ```fsharp
     type AccountingEventHandler(io: PrepareReportLineFlow.IO) = // class in F# :( DI using ctor -1
         interface Events.EventHandler<GlobalEvents.BillingItemsArchived> with // interface implementation ;/
@@ -166,7 +166,7 @@ Great! Let's add the next parameters.
 Func<FSharpAsync<SalesInvoicesReportId>> generateSalesReportId = () =>
     SalesReportDao.generateSalesReportId(_fSqlConnectionFactory);
 ```
-No, we don't have an extension method for converting C# Func that takes nothing and returns something (so action delegate). It should be easier to write than the previous one (without the 'a right?) 
+No, we don't have an extension method for converting C# Func that takes nothing and returns something (so action delegate). It should be easier to write than the previous one (without the 'b right?) 
 ```fsharp
 [<Extension>]
 static member ToFSharpFunc (func:System.Func<'a>) = fun() -> func.Invoke();
@@ -199,7 +199,7 @@ return () => CloseReportingPeriodFlow.closeReportingPeriod(io);
 ```
 ``Cannot convert expression type 'Microsoft.FSharp.Control.FSharpAsync<Microsoft.FSharp.Core.Unit>' to return type 'System.Threading.Tasks.Task'``
 As you (should) know in C# programming model, asynchronous methods return objects of type ``Task<T>``. F# has it own type ``Async<T>``. We see it as ``FSharpAsync`` (error message). They are not compatible becuase they use different asynchrnous model:
-* C# uses **Hot Tasks**. In this model asynchronous code returns a Task that already has been cancelled and will eventually produce a value.
+* C# uses **Hot Tasks**. In this model asynchronous code returns a Task that already has been started and will eventually produce a value.
 * F# uses **Tasks generators**. In this model asynchronous code returns an object that will generate and start a task when it is provided with a continuation to be called when the operation completes.
 
 Each has it pros and cons. If you are interested in more details I strongly recommend a series of 4 blog posts from Tomas Petricek who was responsible for selecting asynchronous model for F# [4] together with Don Syme.
