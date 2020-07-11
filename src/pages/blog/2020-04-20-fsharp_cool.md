@@ -4,7 +4,7 @@ title: 'Few snippets that prove F# COOLNESS'
 date: 2020-04-20T23:20:10.000Z
 description: >-
   There's a legend around F# that the language is good for science, academic stuff (yes it is good for this as well but not only). Most people think that functional languages are complicated and thus will make them not productive. Nonsense! Let me introduce you to some cool F# features that can make you more productive. You can put away difficult things into the future, meanwhile use F# to write correct and concise code and create bullet-proof cool apps! Let me start with F# justification as a modern language then some functional programming evangelism, after that I will give you some F# selling points.
-featuredpost: true
+featuredpost: false
 featuredimage: /img/fsharp.webp
 tags:
   - 'F#'
