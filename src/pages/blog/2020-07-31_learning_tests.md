@@ -26,6 +26,16 @@ The learning tests prove to be a very useful tool many times for me. I am wonder
 
 Boom! 
 > Sure! Please have a look at this test. Here's everything you need.
+
+#### 5.1 Some opinions from my teammates
+I have asked my teammates about learning tests - they didn't write them before as well. The question was more or less:
+> What do you think about learning tests? 
+
+> Ok - Anna.
+
+> Ok - Maciej.
+
+> Ok - Marcin.
 - - -
 <small>
 <b>Footnotes:</b><br/>
