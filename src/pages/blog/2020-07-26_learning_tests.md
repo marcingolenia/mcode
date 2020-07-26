@@ -74,7 +74,9 @@ public async Task Given_CompanyreatedEvent_When_EventIsReceived_Then_ItIsPrinted
 }
 ```
 
-2. We were asked to integrate with Salesforce to invoice some stuff that our salespeople were putting there. Again we conducted a spike with a series of experiments to verify if we are able to get the data we need:
+We have learned that we have to write custom deserializer to fetch cloud events with mass transit that would handle the cloud event message envelope. This took some time which was addressed by the spike planned effort.
+
+2. We were asked to integrate with Salesforce to invoice some stuff that our salespeople were putting there. Again we conducted a spike with a series of experiments to verify if we can get the data we need:
 
 ```fsharp
 
@@ -124,6 +126,21 @@ let ``Examine contracts schema, list contracts relavant data`` () =
             headers = ["Authorization", token; "X-PrettyPrint", "1"], query = ["q", "SELECT Id, Name, Initial_Subscription_date__c, Next_Invoice_Date__c, Number_of_paying_users__c, Number_of_Paying_Users__c FROM Contract__c" ])
     columnsNames |> Seq.length |> should be (greaterThan 0)
     soqlContractsResponse |> should not' (be Empty)
+```
+We have learned a lot. Instead of blind-estimate in the form of "we will do this in X days", we planned a spike with planned hours we want to "pay" to get the right knowledge. After we spent X days we've created a user story to implement the actual feature. We didn't make it but we have made it 2 days later. In this complexity, the business people were all in all more than happy! Without these tests, we would fail severely. Before we wrote the true code in the learning tests I've also written this comment;
+```csharp
+// 1. Connected app must be created in app manager https://ihavetokeepitsecret.lightning.force.com/lightning/setup/NavigationMenus/home
+// 1a. Checkbox Enable O-Auth Settings Must be selected
+// 1b. Select proper scope, I selected full-access.
+// 2. Find your connected app on the apps list in app manager
+// 3. From the right down-arrow select Manage
+// 4. Click edit policies
+// 5. For "Permitted Users" select "Allow all users to self-authorize"
+// 6. Go back to the list of apps. Now from the down-arrow select view
+// 7. Get the consumer key and consumer secret.
+// 8. Test the connection with curl:
+// curl https://iahvetokeepitsecret.salesforce.com/services/oauth2/token -d "grant_type=password" -d "client_id=[consumerKey]" -d "client_secret=[consumerSecret]" -d "username=[userName]" -d "password=[Password]"
+// 9. Enjoy the token. Refer to the app if you want to check some settings.
 ```
 
 I hope you get the idea.
