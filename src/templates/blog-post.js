@@ -4,6 +4,7 @@ import { kebabCase } from 'lodash'
 import Helmet from 'react-helmet'
 import { graphql, Link } from 'gatsby'
 import Layout from '../components/Layout'
+import { UtterancesComments } from '../components/UtterancesComments'
 import Content, { HTMLContent } from '../components/Content'
 
 export const BlogPostTemplate = ({
@@ -75,15 +76,7 @@ const BlogPost = ({ data }) => {
         tags={post.frontmatter.tags}
         title={post.frontmatter.title}
       />
-      <section>
-        <script src="https://utteranc.es/client.js"
-                repo="marcingolenia/mcode"
-                issue-term="title"
-                theme="github-light"
-                crossorigin="anonymous"
-                async>
-        </script>
-      </section>
+      <UtterancesComments/>
     </Layout>
   )
 }
