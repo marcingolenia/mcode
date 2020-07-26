@@ -17,9 +17,10 @@ The idea of learning tests is old - I have read about it for the first time in C
 ## 2. What are these tests? Why do you think they are so precious?
 
 * They cost nothing! All in all, you will have to spend time learning a particular library/framework.
-* You create knowledge - the tests will be in source control, everyone in the organization can learn from them.
+* You create knowledge - the tests will be in source control, everyone in the organization can learn from them. In other words you reduce bus-factor.
 * You gain hands-on experience very fast when compared to stop and run an app over and over again.
 * The hands-on experience helps you to give more precise estimations for the upcoming tasks.
+
 
 To be honest, having in mind the first post of pros I don't see any cons. This is extremely rare in IT but this is the reason why I decided to write a post about it.
 
