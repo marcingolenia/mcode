@@ -75,6 +75,13 @@ const BlogPost = ({ data }) => {
         tags={post.frontmatter.tags}
         title={post.frontmatter.title}
       />
+      <script src="https://utteranc.es/client.js"
+        repo="https://github.com/marcingolenia/mcode"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+      </script>
     </Layout>
   )
 }
