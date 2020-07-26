@@ -75,13 +75,15 @@ const BlogPost = ({ data }) => {
         tags={post.frontmatter.tags}
         title={post.frontmatter.title}
       />
-      <script src="https://utteranc.es/client.js"
-        repo="https://github.com/marcingolenia/mcode"
-        issue-term="pathname"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
-      </script>
+      <section>
+        <script src="https://utteranc.es/client.js"
+                repo="marcingolenia/mcode"
+                issue-term="title"
+                theme="github-light"
+                crossorigin="anonymous"
+                async>
+        </script>
+      </section>
     </Layout>
   )
 }
