@@ -17,9 +17,9 @@ The idea of learning tests is old - I have read about it for the first time in C
 ## 2. What are these tests? Why do you think they are so precious?
 Learning tests provide a convenient mechanism for exploring an API in an isolated, incremental, and reproducible way. They also provide a demonstrably accurate form of documentation for future reference. Let's define some advantages that they bring:
 
-* They cost nothing! All in all, you will have to spend time learning a particular library/framework. This point I took from the Clean Code book [2].
-* They are an investment - when a new version of an external dependency is released we run learning tests and we check if there are some differences. This again comes from the Clean Code book [2].
-* You create knowledge - the tests will be in source control, everyone in the organization can learn from them. In other words, you reduce bus-factor.
+* They cost nothing! All in all, you will have to spend time learning a particular library/framework. This point I took from the Clean Code book [1], [2].
+* They are an investment - when a new version of external dependency is released we run learning tests and we check if there are some differences. This again comes from the Clean Code book [1], [2].
+* You create knowledge - the tests will be in source control, everyone in the organization can learn from them. In other words, you reduce the bus-factor.
 * You gain hands-on experience very fast when compared to stop and run an app over and over again.
 * The hands-on experience helps you to give more precise estimations for the upcoming tasks. This is an ideal "expected result" to be contained in spikes as part of the Definition of Done. If you don't know what are spikes make sure to check Mick Cohn blog about it [4].
 
