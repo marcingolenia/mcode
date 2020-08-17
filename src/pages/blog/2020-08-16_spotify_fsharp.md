@@ -71,9 +71,9 @@ This should be simple enough;
 1. `Signal` is a union type that can be used to manipulate the player.
 2. `PlaybackSatatys` is a union type that will represent player playback status.
 3. `Sing` is a record that will hold song data retrieved from the player.
-4. `IPlayer` is an interface that inherits the `IDBusObject` interface according to documentation. It has to be public, otherwise Tmds.Dbus will fail to do anything (inluding internal access modifier).
+4. `IPlayer` is an interface that inherits the `IDBusObject` interface according to documentation. It has to be public, otherwise Tmds.Dbus will fail to do anything (including internal access modifier).
 5. `IPlayer` methods represent D-Bus operations - signals and method for data retrieval `GetAsync<'T>`.
-6. Finally, we create the proxy - `player` instance which will be used for actual operations. Let's keep it private in the module - C# Tasks are not natural to F# and let's hide data retrieval behind clean API.
+6. Finally, we create the proxy - `player` instance which will be used for actual operations. Let's keep it private in the module - C# Tasks are not natural to F# and let's hide data retrieval behind clean API. To Create the proxy we have to pass service name and object path. The low-level D-Bus protocol, and corresponding libdbus API provides this concept. The idea of an object path is that higher-level bindings can name native object instances, and allow remote applications to refer to them. 
 
 Time to retrieve the song and playback status:
 
