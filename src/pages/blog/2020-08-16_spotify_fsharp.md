@@ -13,7 +13,7 @@ tags:
 ## 1. Introduction
 Lately, I got inspired by the python program [spotify-cli-linux](https://github.com/pwittchen/spotify-cli-linux) written by my friend. I decided to write the port of this app in .net core in F#. If you can't way to see the source code [here it is](https://github.com/marcingolenia/spotify-cli-linux).
 ## 1.1 D-bus
-D-Bus is a message bus system, which allows inter-applications communication. In addition, D-Bus helps coordinate process lifecycle; it makes it simple and reliable to code a "single instance" application or daemon, and to launch applications and daemons on demand when their services are needed. Linux desktop environments take advantage of the D-Bus facilities by instantiating not one bus but many:
+D-Bus is a message bus system, which allows inter-applications communication. Also, D-Bus helps coordinate process lifecycle; it makes it simple and reliable to code a "single instance" application or daemon, and to launch applications and daemons on demand when their services are needed. Linux desktop environments take advantage of the D-Bus facilities by instantiating not one bus but many:
 * A single system bus, available to all users and processes of the system, that provides access to system services (i.e. services provided by the operating system and also by any system daemons).
 * A session bus for each user login session, that provides desktop services to user applications in the same desktop session, and allows the integration of the desktop session as a whole. Spotify belongs here.
 
@@ -70,7 +70,7 @@ module SpotifyBus =
 This should be simple enough;
 1. `Signal` is a union type that can be used to manipulate the player.
 2. `PlaybackSatatys` is a union type that will represent player playback status.
-3. `Sing` is a record that will hold song data retrieved from the player.
+3. `Song` is a record that will hold song data retrieved from the player.
 4. `IPlayer` is an interface that inherits the `IDBusObject` interface according to documentation. It has to be public, otherwise Tmds.Dbus will fail to do anything (including internal access modifier).
 5. `IPlayer` methods represent D-Bus operations - signals and method for data retrieval `GetAsync<'T>`.
 6. Finally, we create the proxy - `player` instance which will be used for actual operations. Let's keep it private in the module - C# Tasks are not natural to F# and let's hide data retrieval behind clean API. To Create the proxy we have to pass service name and object path. The low-level D-Bus protocol, and corresponding libdbus API provides this concept. The idea of an object path is that higher-level bindings can name native object instances, and allow remote applications to refer to them. 
@@ -257,9 +257,9 @@ Let's do a quick recap:
 1. We have an adapter to communicate with Spotify.
 2. We have an adapter to retrieve lyrics.
 
-Let's host these functionalities now by command line app. To help with arguments parsing I was looking at two libraries:
-1. System.CommandLine [6] - this is my default when I do C# CLI.
-2. Argu [5]- something new writting in F# for F# CLI.
+Let's host these functionalities now by command-line app. To help with arguments parsing I was looking at two libraries:
+1. System.CommandLine [6] - This is my default when I do C# CLI.
+2. Argu [5]- something new writing in F# for F# CLI.
 
 I decided to give it a try with Argu. I have started with arguments specification;
 
