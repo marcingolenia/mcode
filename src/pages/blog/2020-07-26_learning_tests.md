@@ -174,7 +174,7 @@ I have asked my teammates about learning tests. The question was more or less:
 Books:<br/>
 
 [2] *Clean Code: A Handbook of Agile Software Craftsmanship* by Robert C. Martin.<br/>
-[3] *Implementing Lean Software Development From Concept to Cash* by Robert C. Martin.<br/>
+[3] *Implementing Lean Software Development From Concept to Cash* by Mary & Tom Poppendeick.<br/>
 
 Websites: <br/>
 
