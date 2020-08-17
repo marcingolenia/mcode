@@ -363,7 +363,7 @@ Some comments to the code:
 let errorHandler2 = ProcessExiter (fun(code) -> match code with | ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
 ```
 3. `execute = command -> Async<string option>` is a function which takes the parsed by Argu's argument and handles it (uses spotifyBus or asks for lyrics).
-4. In the first line of the main method we create the parser by passing our Arguments interface described in previous coude listening.
+4. In the first line of the main method we create the parser by passing our Arguments interface described in previous source code listening.
 5. Finally, we parse the command the execute the action or we print the text with instructions if no argument was passed.
 
 Done!
