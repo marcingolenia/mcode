@@ -4,14 +4,14 @@ title: >-
   Stop retyping your branch name when you push to origin
 date: 2020-09-12T20:00:00.000Z
 description: >-
-  Just stop 🤬 There is a better way of doing it! Fire one command and spare few seconds multiplied but a hundred times. Welcome to my shortest post on this blog.
+  Just stop 🤬 There is a better way of doing it! Fire one command and spare few seconds multiplied by a hundred times. Welcome to my shortest post on this blog.
 featuredpost: true
 featuredimage: /img/git.png
 tags:
   - git
 ---
 ## 1. The problem and the solution
-So after a few years of creating new branches and pushing them to origin, I realized that I am doing a strange thing **each time**. Let's begin the simulation.
+So after a few years of creating new branches and pushing them to the origin, I realized that I am doing a strange thing **each time**. Let's begin the simulation.
 1. Create the branch locally.
 2. Do some changes, commit them.
 3. Time to push the changes:
