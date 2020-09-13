@@ -11,7 +11,7 @@ export const UtterancesComments = () => (
         scriptElem.async = true;
         scriptElem.crossOrigin = "anonymous";
         scriptElem.setAttribute("repo", "marcingolenia/mcode");
-        scriptElem.setAttribute("issue-term", "title");
+        scriptElem.setAttribute("issue-term", "url");
         scriptElem.setAttribute("theme", "github-light");
         scriptElem.setAttribute("crossorigin", "anonymous")
         elem.appendChild(scriptElem);
