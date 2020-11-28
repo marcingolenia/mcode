@@ -8,7 +8,7 @@ description: >-
 featuredpost: true
 featuredimage: /img/slinux.png
 tags:
-  - fsharp
+  - 'F#'
 ---
 ## 1. Introduction
 Lately, I got inspired by the python program [spotify-cli-linux](https://github.com/pwittchen/spotify-cli-linux) written by my friend. I decided to write the port of this app in .net core in F#. If you can't way to see the source code [here it is](https://github.com/marcingolenia/spotify-cli-linux).
@@ -286,7 +286,7 @@ type Arguments =
             | Status -> "Shows song name and artist"
             | Lyrics -> "Prints the song lyrics"
 ```
-I am not sure if I've modeled the requirement that you can specify only one argument when running the app - If you know Argu better than me let me know in comments I will be happy to change this. I couldn't find a better way in docs or examined examples. All in all the `[<First>]` attribute means simple that the argument has to be first - in another case Argu will return an error during command argument parsing. The interface with the `Usage` member helps to generate usage instructions: 
+I am not sure if I've modeled the requirement that you can specify only one argument when running the app - If you know Argu better than me let me know in the comments I will be happy to change this. I couldn't find a better way in docs or examined examples. All in all the `[<First>]` attribute means that the argument has to be in the first place - in another case Argu will return an error during command argument parsing. The interface with the `Usage` member helps to generate usage instructions: 
 ```bash
 spot --help
 USAGE: dotnet [--help] [--play] [--pause] [--prev] [--next] [--status] [--lyrics]
