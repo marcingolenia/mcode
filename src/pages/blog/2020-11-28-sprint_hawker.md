@@ -5,7 +5,7 @@ title: >-
 date: 2020-11-28T15:00:00.000Z
 description: >-
   So the company is paying you and other people in the team money for accomplishing certain things... for building products, delivering features, solving problems, doing maintenance. You work hard, so do your peers. What about making the sprint-backlog even more transparent and automate a shout-out of what had been done in the sprint? 
-featuredpost: true
+featuredpost: false
 featuredimage: /img/hawker.png
 tags:
   - agile software development

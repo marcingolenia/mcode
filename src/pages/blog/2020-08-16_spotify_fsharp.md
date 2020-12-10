@@ -5,7 +5,7 @@ title: >-
 date: 2020-08-16T20:00:00.000Z
 description: >-
   I am addicted to Spotify, I have Linux, I L💖ve F# so I decided to give it a try to control Spotify on Linux using Terminal. Join the ride! We will add a nice feature that will allow us to download lyrics of the current song and we will meet D-bus and Argu - F# library which makes building CLI apps fun! I will also show you how to publish and use the app in Linux.
-featuredpost: true
+featuredpost: false
 featuredimage: /img/slinux.png
 tags:
   - 'F#'
