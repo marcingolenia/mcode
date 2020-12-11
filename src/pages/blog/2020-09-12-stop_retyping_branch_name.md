@@ -5,7 +5,7 @@ title: >-
 date: 2020-09-12T20:00:00.000Z
 description: >-
   Just stop 🤬 There is a better way of doing it! Fire one command and spare few seconds multiplied by a hundred times. Welcome to my shortest post on this blog.
-featuredpost: true
+featuredpost: false
 featuredimage: /img/git.png
 tags:
   - git

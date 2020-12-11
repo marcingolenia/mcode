@@ -5,7 +5,7 @@ title: >-
 date: 2020-07-26T21:00:00.000Z
 description: >-
   How do you approach integration with 3rd party services? How do you learn new API which you have to use? Do you write a console app, run and stop it over and over again? If you write a service that will be used by others do you write documentation? Stop wasting time! Learning tests will help you speed up.
-featuredpost: true
+featuredpost: false
 featuredimage: /img/learning_tests.png
 tags:
   - agile software development

@@ -12,7 +12,7 @@ description: >-
   area to extend/introduce changes so why not take F# to the next level? If you
   are looking for some hints how to deal with F# and C# in one solution this is
   a must-read.
-featuredpost: true
+featuredpost: false
 featuredimage: /img/cf.png
 tags:
   - 'F#'
