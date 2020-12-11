@@ -17,6 +17,7 @@ tags:
 First, let me make sure that you know what composition root is. I will take the definition from Dependency Injection Principles, Practices, and Patterns book [1]:
 
 > DEFINITION: A Composition Root is a single, logical location in an application where modules are composed together [1].
+
 It also answers the important question "Where should we compose object graphs?" - "As close as possible to the application's entry point.
 
 Let's create such a place in the Giraffe F# based project ([A functional ASP.NET Core micro web framework [2]](https://github.com/giraffe-fsharp/Giraffe) together with .NET 5.0. We will be using the partial application to achieve our goal. Note that in functional programming we can also try different techniques: "Reader Monad" and the "Free Monad" but these techniques are far harder. I will tackle them in the future on my blog.
