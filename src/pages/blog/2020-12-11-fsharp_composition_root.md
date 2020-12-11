@@ -2,7 +2,7 @@
 templateKey: blog-post
 title: >-
   F# Dependency Injection - how to compose dependencies with partial application and don't fail with tests
-date: 2020-12-05T20:00:00.000Z
+date: 2020-12-1T19:35:00.000Z
 description: >-
   One question you might ask yourself before starting a bigger project in F# How to inject dependencies? Let me show you how we used partial application to achieve loosely coupled testable components that can be tested in isolation or together in a broader perspective (acceptance tests). I will use Giraffe as the host, but the technique is free from any framework dependencies.
 featuredpost: true
@@ -35,6 +35,7 @@ Everything is based on real code which is available on GitHub here: https://gith
 * Nice fake for HttpContext which allows e2e testing with Giraffe.
 * Id generation like Twitter Snowflake
 * Sample usage of FsToolkit.ErrorHandling for `Async<Result<,>>` code.
+* Domonstrates simple design of functional core, imperative shell. See point 7 for more.
 
 I made this for you :) Don't hesitate to use it or submit a PR with improvements!
 
@@ -222,7 +223,10 @@ And you are good to go! Before we identify the problem let me add dependencies t
       GenerateId = idGenerator
     }
 ```
-Again, if you are interested in IdGenerator please see the code by yourself. Having this we can already start the app fire POST, create the stock item, we will receive a nice Location header, we can get the id from there and query for the stock item that we've created.
+Again, if you are interested in IdGenerator please see the code by yourself. Having this we can already:
+1. Start the app and fire POST  to create the stock item.
+2. Receive a nice Location header in the response.
+3. Get the id from the header and query for the stock item that we've created.
 
 So what's the fuss? 
 
@@ -235,6 +239,8 @@ Maybe sometimes you want to write acceptance tests with all the dependencies inc
 #### 4.1 Acceptance tests
 I will skip the integration test and unit test - they are too easy for us. Let's write the acceptance test for the use case. Reminder:
 >Let's imagine the following use case: Create a stock item with the name and amount of available items and Read the created item.
+
+`Tests1.fs`
 ```fsharp
 module Tests1
 
@@ -295,7 +301,7 @@ let testSettings: Settings =
 
 let testRoot = compose testSettings
 ```
-**There is no place we can fake** the `StockItemDao.insert createSqlConnection`. Do you see it? Database communication is a must! In this case this is just our database that we control but this can be simply anything! All kinds of IO here. The IO operations are hidden by the composition root - that's the real problem. 
+**There is no place we can fake** the `StockItemDao.insert createSqlConnection`. Do you see it? Database communication is a must! In this case, this is just the database that we control but this can be simply anything! All kinds of IO here. The IO operations are hidden by the composition root - that's the real problem. 
 
 The alternative is to compose the function without the composition root and pass it to the httpHandler. Ok that is not that so bad but it has two significant drawbacks:
 * You don't test your dependency tree because you are composing dependencies in your tests, not in the code that runs on production.
@@ -309,11 +315,11 @@ I didn't get the proposed solution on SO question [3] at first. I came up with a
 So... CompositionRoot... what have roots? Right! A tree. Imagine that we have to build the tree now and let's start from the top. Bear with me, once we go through you will get the idea!
 
 #### 5.1 Leaves
-Leaves are the IO operations associated with different kinds of dependencies side effects. Databases, Http, WCF... you name the next one. We should have them a lot of to have a decent tree! For us it will be the `QueryStockItemBy` and `GenerateId` and the 3 functions from `StockItemWorkflows.IO` type.
+Leaves are the IO operations associated with different kinds of dependencies side effects. Databases, Http, WCF... you name the next one. We should have them a lot of, to have a decent tree! For us, it will be the `QueryStockItemBy` and `GenerateId` and the 3 functions from `StockItemWorkflows.IO` type.
 ![](img/leaves.png)
 
 #### 5.2 Trunk
-Trunk will take all of those dependencies into one place. The trunk will be a support for our leaves. Settings will passed right into the trunk and the trunk will distribute the proper pieces of settings into the leaves. 
+Trunk will take all of those dependencies into one place. The trunk will be a support for our leaves. Settings will be passed right into the trunk and the trunk will distribute the proper pieces of settings into the leaves. 
 ![](img/tree.png)
 
 
@@ -325,17 +331,201 @@ The Root will hide all the complexity. Having the root we will be able to call t
 * Trunk = host of all the Leaves + common IO dependencies needed in different places (like id generation).
 * Root = proper composition root.
 
-Now let me show you the implementation. After that, I will show you the benefits inside the tests!
+Now let me show you the implementation. After that, I will show you the benefits of it in the tests. I used to structure the flexible composition root like this;
+![](img/flex_root.png)
 
-TODO
+One of the leaves may look just like that; 
+`StockItemWorkflowsDependencies.fs`
+```fsharp
+namespace Api.FlexibleCompositionRoot.Leaves
 
-## 6. Testing
+open System.Data
+open Stock.Application
+open Stock.PostgresDao
 
-#### 6.1 In Isolation
+module StockItemWorkflowDependencies =
+    let compose (createDbConnection: unit -> Async<IDbConnection>) : StockItemWorkflows.IO =
+        {
+            ReadBy = StockItemDao.readBy createDbConnection
+            Update = StockItemDao.update createDbConnection
+            Insert = StockItemDao.insert createDbConnection
+        }
+```
+You will have a lot of leaves in a more complex solution. There will be one trunk, which may look like this:
+`Trunk.fs`
+```fsharp
+namespace Api.FlexibleCompositionRoot
 
-#### 6.2 Acceptance
+open Settings
+open Stock.Application
+open Stock.PostgresDao 
 
-## 3. Wait! Isn't that a service locator that you do in HttpHandlers? 
+module Trunk = 
+    type Trunk =
+        {
+            GenerateId: unit -> int64
+            StockItemWorkflowDependencies: StockItemWorkflows.IO
+            QueryStockItemBy: Queries.StockItemById.Query -> Async<Queries.StockItemById.Result option>
+        }
+        
+    let compose (settings: Settings) =
+        let createDbConnection = DapperFSharp.createSqlConnection settings.SqlConnectionString
+        {
+            GenerateId = IdGenerator.create settings.IdGeneratorSettings
+            StockItemWorkflowDependencies = Leaves.StockItemWorkflowDependencies.compose createDbConnection
+            QueryStockItemBy = RoomQueryDao.readBy createDbConnection
+            // Your next application layer workflow dependencies ...
+        }
+```
+And finally the composition root;
+`FlexibleCompositionRoot.fs`
+```fsharp
+module FlexibleCompositionRoot
+  open Api.FlexibleCompositionRoot
+  open Stock.Application
+  open Stock.StockItem
+
+  type FlexibleCompositionRoot =
+    { QueryStockItemBy: Queries.StockItemById.Query -> Async<Queries.StockItemById.Result option>
+      RemoveFromStock: int64 -> int -> Async<Result<unit, StockItemErrors>>
+      CreateStockItem: int64 -> string -> int -> Async<unit>
+      GenerateId: unit -> int64
+    }
+    
+  let compose (trunk: Trunk.Trunk) =
+    {
+      QueryStockItemBy = trunk.QueryStockItemBy
+      RemoveFromStock = StockItemWorkflows.remove trunk.StockItemWorkflowDependencies
+      CreateStockItem = StockItemWorkflows.create trunk.StockItemWorkflowDependencies
+      GenerateId = trunk.GenerateId
+    }
+```
+Building such dependency tree is still strightforward, let me show you the `Program.fs` part that is responsible for this:
+```fsharp
+<EntryPoint>]
+let main args =
+    let contentRoot = Directory.GetCurrentDirectory()
+    let webRoot     = Path.Combine(contentRoot, "WebRoot")
+    let confBuilder = ConfigurationBuilder() |> configureSettings
+    // old way -> let root        = InflexibleCompositionRoot.compose (confBuilder.Build().Get<Settings>())
+    let trunk       = Trunk.compose (confBuilder.Build().Get<Settings>())
+    let root        = FlexibleCompositionRoot.compose trunk
+    Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(
+            fun webHostBuilder ->
+                webHostBuilder
+                    .UseContentRoot(contentRoot)
+                    .UseWebRoot(webRoot)
+                    .Configure(Action<IApplicationBuilder> (configureApp root))
+                    .ConfigureServices(configureServices)
+                    .ConfigureLogging(configureLogging)
+                    |> ignore)
+        .Build()
+        .Run()
+    0
+```
+## 6. Testing with flexible composition root
+It's time to see the benefits of such a structured composition root. We still write unit and integration tests in the same way. You can still write the acceptance tests in the same way or you can pass your custom-defined functions to form the dependency tree. We only have to be sure that the custom function has the same signature. That's a cool feature of functional programming that the function automatically behaves like an interface (first-class functions). Let's write a small helper that will support passing the custom functions as dependencies.
+`TestFlexibleCompositionRoot.fs`
+```fsharp
+module TestFlexibleCompositionRoot
+
+open System
+open Api.FlexibleCompositionRoot
+open FlexibleCompositionRoot
+open Settings
+let testSettings: Settings =
+    // We can test with database but we don't have to.
+    { SqlConnectionString = "Host=localhost;User Id=postgres;Password=Secret!Passw0rd;Database=stock;Port=5432"
+      IdGeneratorSettings =
+          { GeneratorId = 555
+            Epoch = DateTimeOffset.Parse "2020-10-01 12:30:00"
+            TimestampBits = byte 41
+            GeneratorIdBits = byte 10
+            SequenceBits = byte 12 } }
+
+let composeRoot tree = compose tree
+let testTrunk = Trunk.compose testSettings
+
+let ``with StockItem -> ReadBy`` substitute (trunk: Trunk.Trunk) =
+  { trunk with StockItemWorkflowDependencies = { trunk.StockItemWorkflowDependencies with ReadBy = substitute } }
+  
+let ``with StockItem -> Update`` substitute (trunk: Trunk.Trunk) =
+  { trunk with StockItemWorkflowDependencies = { trunk.StockItemWorkflowDependencies with Update = substitute } }
+  
+let ``with StockItem -> Insert`` substitute (trunk: Trunk.Trunk) =
+  { trunk with StockItemWorkflowDependencies = { trunk.StockItemWorkflowDependencies with Insert = substitute } }
+
+let ``with Query -> StockItemById`` substitute (trunk: Trunk.Trunk) =
+  { trunk with QueryStockItemBy = substitute }
+```
+
+This gives us very sexy intellisense: 
+![](img/root_inteli.png)
+
+Time to rewrite our acceptance tests which checks the creation of stock item. I have already tests with sql queries in dedicated project, so let's cut off the database dependencies:
+`Tests2.fs`
+```fsharp
+module Tests2
+
+open System
+open Api
+open Dtos
+open Microsoft.AspNetCore.Http
+open Stock.StockItem
+open Xunit
+open HttpContext
+open FSharp.Control.Tasks.V2
+open FsUnit.Xunit
+open TestFlexibleCompositionRoot
+
+[<Fact>]
+let ``GIVEN stock item was passed into request WHEN CreateStockItem THEN new stock item is created and location is returned which can be used to fetch created stock item`` () =
+    // Arrange
+    let (name, amount) = (Guid.NewGuid().ToString(), Random().Next(1, 15))
+    let httpContext = buildMockHttpContext ()
+                      |> writeObjectToBody {Name = name; Amount = amount}
+    // Data mutation needed instead database operations:
+    let mutable createdStockItem: StockItem option = None
+    let root = testTrunk
+               // first faked function:
+               |> ``with StockItem -> Insert`` (fun stockItem -> async { createdStockItem <- Some stockItem; return () })
+               // second faked function:
+               |> ``with Query -> StockItemById`` (fun _ ->
+                   async {
+                       let stockItem = createdStockItem.Value
+                       let (StockItemId id) = stockItem.Id
+                       return ( Some {
+                           Id = id
+                           AvailableAmount = stockItem.AvailableAmount
+                           Name = stockItem.Name
+                       }
+                               : Queries.StockItemById.Result option)
+                   })
+               |> composeRoot
+    // Act
+    let http =
+        task {
+            let! ctxAfterHandler = HttpHandler.createStockItemHandler root.CreateStockItem root.GenerateId next httpContext 
+            return ctxAfterHandler
+        } |> Async.AwaitTask |> Async.RunSynchronously |> Option.get
+    // Assert
+    http.Response.StatusCode |> should equal StatusCodes.Status201Created
+    let createdId = http.Response.Headers.["Location"].ToString().[11..] |> Int64.Parse
+    let httpContext4Query = buildMockHttpContext ()
+    let httpAfterQuery =
+        task {
+            let! ctxAfterQuery = HttpHandler.queryStockItemHandler root.QueryStockItemBy createdId next httpContext4Query
+            return ctxAfterQuery
+        } |> Async.AwaitTask |> Async.RunSynchronously |> Option.get
+    let createdStockItem = httpAfterQuery.Response |> deserializeResponse<Queries.StockItemById.Result>
+    createdStockItem.Id |> should equal createdId
+    createdStockItem.Name |> should equal name
+    createdStockItem.AvailableAmount |> should equal amount
+```
+That was a long way wasn't it? Once you will try this approach you will stick to it believe me - the flexibility you have while writing your tests is worht it. 
+
+## 7. Wait! Isn't that a service locator that you do in HttpHandlers? 
 Let's look again into the DI book [1] to bring the definition
 > A Service Locator supplies application components outside the Composition Root with access to an unbounded set of Volatile Dependencies.
 
@@ -348,9 +538,14 @@ In contradiction our composition root:
 2. CompositionRoot is not dragged around as redundant dependency. All of the CompositionRoot members should be used - so we are far from "redundant".
 3. All dependencies of our top-level component (HttpHandler) limit to the CompositionRoot and it is *obvious* that we want to associate specific "workflows" with given handlers. The "workflows" dependencies are obvious and explicit.
 
-## 4. Conclusions
+## 7. Impure/pure sandwich aka imperative shell 
+Before I write some conclusions, let me emphasize one thing here. This approach works extremely well with imperative shell and functional core. You can read more on Mark Seeman blog [4] and Gary Bernhardt presentation [5]. In short: It is about moving the side effects functions to boundaries of the workflows (no `Async` in the domain, no synchronous operations which causes state changes elsewhere - for example in database). This approach makes testing far easier, you get easy multithreading for IO stuff and makes reasoning about the program's state over much easier. 3 times easy! Do it!
+
+## 8. Conclusions
 I use this approach in my current project, the team is happy with both - testing strategy and the way the dependencies are being composed. By treating the composition root as a tree with leaves, trunk, and roots we can segregate our concerns - functions with side effects from pure functions. Note that I have used Giraffe as the host, but the composition root is free from any framework references. You should be able to use this way in any F# project.
 
+## 9. EXTRA: Homework!
+Try to write acceptance test for removing items from the stock in both approaches. I wrote the "production code" for you already. This will fully help you understand how to do it. This approach works extremely well with TDD as well - try to extend the functionality with one more use-case; adding items to the stock, but write the tests first.
 - - -
 <b>References:</b><br/>
 Websites: <br/>
@@ -358,4 +553,5 @@ Websites: <br/>
 [1] [*Dependency Injection Principles, Practices, and Patterns* by Mark Seeman](https://www.goodreads.com/book/show/44416307-dependency-injection-principles-practices-and-patterns) <br/>
 [2] [*Functional approaches to dependency injection* by Scott Wlaschin](https://fsharpforfunandprofit.com/posts/dependency-injection-1/) <br/>
 [3] [Stack overflow question: F# analog of dependency injection for a real project](https://stackoverflow.com/questions/52156730/f-analog-of-dependency-injection-for-a-real-project) <br/>
-
+[4] [Impureim sandwich by Mark Seemann](https://blog.ploeh.dk/2020/03/02/impureim-sandwich/)<br/>
+[5] [Functional Core Imperative Shell by Gary Bernhardt](https://www.destroyallsoftware.com/screencasts/catalog/functional-core-imperative-shell)
