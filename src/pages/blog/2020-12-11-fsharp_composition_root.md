@@ -2,7 +2,7 @@
 templateKey: blog-post
 title: >-
   F# Dependency Injection - how to compose dependencies with partial application and don't fail with tests
-date: 2020-12-1T19:35:00.000Z
+date: 2020-12-11T19:35:00.000Z
 description: >-
   One question you might ask yourself before starting a bigger project in F# How to inject dependencies? Let me show you how we used partial application to achieve loosely coupled testable components that can be tested in isolation or together in a broader perspective (acceptance tests). I will use Giraffe as the host, but the technique is free from any framework dependencies.
 featuredpost: true
