@@ -20,23 +20,23 @@ First, let me make sure that you know what composition root is. I will take the 
 
 It also answers the important question "Where should we compose object graphs?" - "As close as possible to the application's entry point.
 
-Let's create such a place in the Giraffe F# based project ([A functional ASP.NET Core micro web framework [2]](https://github.com/giraffe-fsharp/Giraffe) together with .NET 5.0. We will be using the partial application to achieve our goal. Note that in functional programming we can also try different techniques: "Reader Monad" and the "Free Monad" but these techniques are far harder. I will tackle them in the future on my blog.
+Let's create such a place in the Giraffe F# based project [(a functional ASP.NET Core micro web framework [2])](https://github.com/giraffe-fsharp/Giraffe) together with .NET 5.0. We will be using the partial application to achieve our goal. Note that in functional programming we can also try different techniques: "Reader Monad" and the "Free Monad" but these techniques are far harder. I will tackle them in the future on my blog.
 
 #### 1.1 Why this post?
-The post is heavily inspired by Scott Wlaschin post about Dependency Injection in F# [2]. It is great! It will give you strong fundaments on the topic. Mine post focuses heavily on implementation, Scott's more on the partial application as IoC technique in genral so make sure you read it and please come back - I have some answers for you once you will try to implement the described solution in a real project. There is a comment in the post by Konstantin at the bottom of the page. He asks about unit, integration, Acceptance Tests and how it may look like in F# - I have the answer here. 
+The post is heavily inspired by Scott Wlaschin's post about Dependency Injection in F# [2]. It is great! It will give you strong fundaments on the topic. Mine post focuses heavily on implementation, Scott's more on the partial application as IoC technique in general so make sure you read it and please come back - I have some answers for you once you will try to implement the described solution in a real project. There is a comment in the post by Konstantin at the bottom of the page. He asks about unit, integration, Acceptance Tests, and how it may look like in F# - I have the answer here. 
 Also when I started to implement IoC at my work we quickly run into issues with testing that were caused by one piece composition root. I came across StackOverflow issue [3] which addressed my problem. It took me on the right track which I wanted to describe in the post. To fully understand the issue we have to face the problem first.
 
-#### 1.2 The sample solotion
+#### 1.2 The sample solution
 Everything is based on real code which is available on GitHub here: https://github.com/marcingolenia/FsharpComposition. You might want to clone the repository, to see how it is done. 100% real stuff, no bullshit:
 * .NET 5.0 with Giraffe based API.
 * Docker with PostgreSql + script that creates database and table (you have to run it by yourself).
-* Thoth.json for serializing objects. I like NoSql in Sql :)
-* Composing dependencies using composition root and partial application that uses settings read from json file
+* Thoth.json for serializing objects. I like NoSQL in SQL :)
+* Composing dependencies using composition root and partial application that uses settings read from JSON file
 * Unit tests, integration tests, acceptance tests with FsUnit
 * Nice fake for HttpContext which allows e2e testing with Giraffe.
 * Id generation like Twitter Snowflake
 * Sample usage of FsToolkit.ErrorHandling for `Async<Result<,>>` code.
-* Domonstrates simple design of functional core, imperative shell. See point 7 for more.
+* Demonstrates simple design of functional core, imperative shell. See point 7 for more.
 
 I made this for you :) Don't hesitate to use it or submit a PR with improvements!
 
@@ -49,7 +49,7 @@ Besides, we will have some settings read from the json file (there are always so
 
 Easy? Of course!
 
-Let's start with an extra easy domain `StockItem.fs` (don't bother with remove function - it is a homework for you, I will mention it later):
+Let's start with an extra easy domain `StockItem.fs` (don't bother with the remove function - it is homework for you, I will mention it later):
 ```fsharp
 namespace Stock
 
@@ -233,7 +233,7 @@ So what's the fuss?
 
 ## 4. Problems with the inflexible implementation - Testing
 
-Testing is the problem. Note the signature of `CreateStockItem` function from Composition root: `CreateStockItem: int64 -> string -> int -> Async<unit>`. It just takes int64 (id), string (name) and int (amount) and returns asynchronously nothing. We are forced to use database in our acceptance tests. You still are able to write unit tests for the domain or integration tests for data access object including database interaction. There are such tests in the repo.
+Testing is the problem. Note the signature of `CreateStockItem` function from Composition root: `CreateStockItem: int64 -> string -> int -> Async<unit>`. It just takes int64 (id), string (name) and int (amount) and returns asynchronously nothing. We are forced to use the database in our acceptance tests. You are still able to write unit tests for the domain or integration tests for data access objects (DAOs) including database interaction. There are such tests in the repo.
 
 Maybe sometimes you want to write acceptance tests with all the dependencies included but sometimes you won't (external services calls - do you want to have your tests failed because not-your service in the test environment is down?). Let me give you the clarification in code...
 
@@ -281,8 +281,8 @@ let ``GIVEN stock item was passed into request WHEN CreateStockItem THEN new sto
     createdStockItem.Name |> should equal name
     createdStockItem.AvailableAmount |> should equal amount
 ```
-The `buildMockHttpContext ()` it's not that important at the moment - but it creates fake HttpContext that allows to play with message body, headers, query string. It is handy - grab the implementation from the repo and take it to the broad world. 
-Note I am passing a function (a use case from application layer) from composition root to our HttpHandler. I have created the `testRoot` before. It's easy:
+The `buildMockHttpContext ()` it's not that important at the moment - but it creates a fake HttpContext that allows playing with the message body, headers, query string. It is handy - grab the implementation from the repo and take it to the broad world. 
+Note I am passing a function (a use case from the application layer) from the composition root to our HttpHandler. I have created the `testRoot` before. It's easy:
 `TestInflexibleCompositionRoot.fs`
 ```fsharp
 module TestInflexibleCompositionRoot
@@ -316,11 +316,11 @@ I didn't get the proposed solution on SO question [3] at first. I came up with a
 So... CompositionRoot... what have roots? Right! A tree. Imagine that we have to build the tree now and let's start from the top. Bear with me, once we go through you will get the idea!
 
 #### 5.1 Leaves
-Leaves are the IO operations associated with different kinds of dependencies side effects. Databases, Http, WCF... you name the next one. We should have them a lot of, to have a decent tree! For us, it will be the `QueryStockItemBy` and `GenerateId` and the 3 functions from `StockItemWorkflows.IO` type.
+Leaves are the IO operations associated with different kinds of dependencies side effects. Databases, Http, WCF... you name the next one. We should have them a lot of, to have a decent tree! For us, it will be the `QueryStockItemBy` and `GenerateId` and the 3 functions from the `StockItemWorkflows.IO` type.
 ![](img/leaves.png)
 
 #### 5.2 Trunk
-Trunk will take all of those dependencies into one place. The trunk will be a support for our leaves. Settings will be passed right into the trunk and the trunk will distribute the proper pieces of settings into the leaves. 
+The trunk will take all of those dependencies into one place. The trunk will be a support for our leaves. Settings will be passed right into the trunk and the trunk will distribute the proper pieces of settings into the leaves. 
 ![](img/tree.png)
 
 
@@ -464,7 +464,7 @@ let ``with Query -> StockItemById`` substitute (trunk: Trunk.Trunk) =
 This gives us very sexy intellisense: 
 ![](img/root_inteli.png)
 
-Time to rewrite our acceptance tests which checks the creation of stock item. I have already tests with sql queries in dedicated project, so let's cut off the database dependencies:
+Time to rewrite our acceptance tests which checks the creation of the stock item. I already have tests with SQL queries in the dedicated project, so let's cut off the database dependencies:
 `Tests2.fs`
 ```fsharp
 module Tests2
@@ -524,7 +524,7 @@ let ``GIVEN stock item was passed into request WHEN CreateStockItem THEN new sto
     createdStockItem.Name |> should equal name
     createdStockItem.AvailableAmount |> should equal amount
 ```
-That was a long way wasn't it? Once you will try this approach you will stick to it believe me - the flexibility you have while writing your tests is worht it. 
+That was a long way, wasn't it? Once you will try this approach you will stick to it believe me - the flexibility you have while writing your tests is worth it. 
 
 ## 7. Wait! Isn't that a service locator that you do in HttpHandlers? 
 Let's look again into the DI book [1] to bring the definition
@@ -540,13 +540,13 @@ In contradiction our composition root:
 3. All dependencies of our top-level component (HttpHandler) limit to the CompositionRoot and it is *obvious* that we want to associate specific "workflows" with given handlers. The "workflows" dependencies are obvious and explicit.
 
 ## 7. Impure/pure sandwich aka imperative shell 
-Before I write some conclusions, let me emphasize one thing here. This approach works extremely well with imperative shell and functional core. You can read more on Mark Seeman blog [4] and Gary Bernhardt presentation [5]. In short: It is about moving the side effects functions to boundaries of the workflows (no `Async` in the domain, no synchronous operations which causes state changes elsewhere - for example in database). This approach makes testing far easier, you get easy multithreading for IO stuff and makes reasoning about the program's state over much easier. 3 times easy! Do it!
+Before I write some conclusions, let me emphasize one thing here. This approach works extremely well with the imperative shell and functional core. You can read more on Mark Seeman's blog [4] and Gary Bernhardt's presentation [5]. In short: It is about moving the side effects functions to boundaries of the workflows (no `Async` in the domain, no synchronous operations which causes state changes elsewhere - for example in the database). This approach makes testing far easier, you get easy multithreading for IO stuff and makes reasoning about the program's state over much easier. 3 times easy! Do it!
 
 ## 8. Conclusions
 I use this approach in my current project, the team is happy with both - testing strategy and the way the dependencies are being composed. By treating the composition root as a tree with leaves, trunk, and roots we can segregate our concerns - functions with side effects from pure functions. Note that I have used Giraffe as the host, but the composition root is free from any framework references. You should be able to use this way in any F# project.
 
 ## 9. EXTRA: Homework!
-Try to write acceptance test for removing items from the stock in both approaches. I wrote the "production code" for you already. This will fully help you understand how to do it. This approach works extremely well with TDD as well - try to extend the functionality with one more use-case; adding items to the stock, but write the tests first.
+Try to write an acceptance test for removing items from the stock in both approaches. I wrote the "production code" for you already. This will fully help you understand how to do it. This approach works extremely well with TDD as well - try to extend the functionality with one more use-case; adding items to the stock, but write the tests first.
 - - -
 <b>References:</b><br/>
 Websites: <br/>
