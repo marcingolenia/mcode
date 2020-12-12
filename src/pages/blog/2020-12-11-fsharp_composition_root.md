@@ -164,7 +164,7 @@ Let's start with the `>=> GET >=> routef "/stockitem/%d"` route. If you have rea
 
   let compose settings =
     let createSqlConnection = DapperFSharp.createSqlConnection settings.SqlConnectionString
-    { QueryStockItemBy = RoomQueryDao.readBy createSqlConnection }
+    { QueryStockItemBy = StockItemQueryDao.readBy createSqlConnection }
 ```
 This is basic stuff. Let me just show you the settings; 
 
@@ -219,7 +219,7 @@ And you are good to go! Before we identify the problem let me add dependencies t
       Insert = StockItemDao.insert createSqlConnection
     }
     {
-      QueryStockItemBy = RoomQueryDao.readBy createSqlConnection
+      QueryStockItemBy = StockItemQueryDao.readBy createSqlConnection
       CreateStockItem = StockItemWorkflows.create stockItemWorkflowsIo
       GenerateId = idGenerator
     }
@@ -374,7 +374,7 @@ module Trunk =
         {
             GenerateId = IdGenerator.create settings.IdGeneratorSettings
             StockItemWorkflowDependencies = Leaves.StockItemWorkflowDependencies.compose createDbConnection
-            QueryStockItemBy = RoomQueryDao.readBy createDbConnection
+            QueryStockItemBy = StockItemQueryDao.readBy createDbConnection
             // Your next application layer workflow dependencies ...
         }
 ```
