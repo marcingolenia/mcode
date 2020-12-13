@@ -545,6 +545,10 @@ Before I write some conclusions, let me emphasize one thing here. This approach 
 ## 8. Conclusions
 I use this approach in my current project, the team is happy with both - testing strategy and the way the dependencies are being composed. By treating the composition root as a tree with leaves, trunk, and roots we can segregate our concerns - functions with side effects from pure functions. Note that I have used Giraffe as the host, but the composition root is free from any framework references. You should be able to use this way in any F# project.
 
+#### 8.1 Two small pieces of advice that can help you in the future
+1. When your composition root will keep growing, consider making more roots. This will help you reason about dependencies. Remember that Composition Root is a single place, not a single type. 
+2. I've created a record type in StockItemWorkflows for IO Dependencies. Feel free to skip it - if you have one or two dependencies you may simply pass the functions with the right signature (like Scott does in his post [2]).
+
 ## 9. EXTRA: Homework!
 Try to write an acceptance test for removing items from the stock in both approaches. I wrote the "production code" for you already. This will fully help you understand how to do it. This approach works extremely well with TDD as well - try to extend the functionality with one more use-case; adding items to the stock, but write the tests first.
 - - -
