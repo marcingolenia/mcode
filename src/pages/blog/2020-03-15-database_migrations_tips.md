@@ -42,9 +42,9 @@ This works fine if you are a 1-member team (or 2). In bigger teams sooner or lat
 
 It's not a tragedy. You do the code review so you can catch this and resolve conflicts... but you don't have to. There is another way. Just use timestamps:
 
-* 20190220203000-AddCustomerTable.sql
-* 20190220203001-AddOrdersTable.sql
-* 20190250212010-AddSuppliersTable.sql
+* 1607176125-AddCustomerTable.sql
+* 1607912575-AddOrdersTable.sql
+* 1607976875-AddSuppliersTable.sql
 
 ## 4. Use the right DSL
 
