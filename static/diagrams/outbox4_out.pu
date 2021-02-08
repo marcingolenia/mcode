@@ -1,0 +1,33 @@
+@startuml
+skinparam handwritten true
+
+actor       user
+participant "Ordering app"
+database    "Ordering db"
+control     Outbox
+queue       queue
+participant "Invoice app"
+database    "Invoice db"
+
+user -> "Ordering app" ++ : Order taxi
+"Ordering app" -> "Ordering db" ++ : Save order / open transaction
+"Ordering app" -> "Ordering db" ++ : Save order placed notification
+return
+return commit transaction
+
+return 200 OK
+
+Outbox -> "Ordering db" ++ : read notifications
+return
+Outbox -> queue ++: publish message
+return ACK
+Outbox -> "Ordering db" ++ : set notification processed
+return
+
+"queue" -> "Invoice app" ++ : order placed
+"Invoice app" -> "Invoice app" : prepare invoice
+"Invoice app" -> "Invoice db" ++ : save invoice
+return
+return ACK
+@enduml
+

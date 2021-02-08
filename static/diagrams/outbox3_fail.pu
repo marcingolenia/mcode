@@ -1,0 +1,23 @@
+@startuml
+skinparam handwritten true
+
+actor       user
+participant "Ordering app"
+database    "Ordering db"
+queue       queue
+participant "Invoice app"
+database    "Invoice db"
+
+user -> "Ordering app" ++ : Order taxi
+"Ordering app" -> "queue" ++ : order placed 
+return
+"Ordering app" -> "Ordering db" !! : Save order
+return 500 Error
+
+"queue" -> "Invoice app" ++ : order placed
+"Invoice app" -> "Invoice app" : prepare invoice
+"Invoice app" -> "Invoice db" ++ : save invoice
+return
+return ACK
+@enduml
+
