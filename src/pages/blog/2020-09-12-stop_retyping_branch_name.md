@@ -38,6 +38,12 @@ Done. Years of copy & pasting the output command are gone. You might want to see
 ```bash
 git config --global --list
 ```
+
+Last thing to remember: If You want to pull from the remote later on, you still have to push the branch and set the tracking. But `-u` is everything you need here. So when you push for the first time use;
+```bash
+git push -u
+```
+
 You can of course apply this setting only to the selected repository. In this case, your working directory should be your repository and you should omit the `--global` argument. Cheers!
 
 ## 2. Conclusions
