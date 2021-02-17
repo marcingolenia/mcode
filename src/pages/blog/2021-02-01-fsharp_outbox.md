@@ -113,9 +113,9 @@ What is Marker? Marker is an empty interface to help us with assembly scanning a
 ```fsharp
 type Marker = interface end
 ```
-to the project with your domain notifications. Keep in mind that it can be anything - record, class, struct, whatever. Some developers likes to force a convention ie you must inhereit from `Notification` class. I don't like that - I see no benefit from it, but it's just my opinion. You may also ask why I decided to process the messages sequentially. Well... if we cannot publish the messages for any reason for some time, the pending outbox messages will keep growing. Firing thousands of messages in Parallel can be a bad idea. If you are sure you will handle the massive load, change it to Parallel - no problem. In github [4] I have introduced a `ParallelizationThreshold` parameter so you can tune the behavior elegantly. 
+to the project with your domain notifications. Keep in mind that it can be anything - record, class, struct, whatever. Some developers like to force a convention for instance you must inherit from `INotification` interface. I don't like that - I see no benefit from it, but it's just my opinion. You may also ask why I decided to process the messages sequentially. Well... if we cannot publish the messages for any reason for some time, the pending outbox messages will keep growing. Firing thousands of messages in Parallel can be a bad idea. If you are sure you will handle the massive load, change it to Parallel - no problem. In github [4] I have introduced a `ParallelizationThreshold` parameter so you can tune the behavior elegantly. 
 
-Full source code can be found on github [4]. That's it - the transactional outbox pattern is ready. 2 types (including empty interface) and 2 functions - as simple as that. The rest are just dependencies. 
+Full source code can be found on github [4]. That's it - the transactional outbox pattern is ready. 2 types (including empty interface) and 2 functions - as simple as that. The rest are just dependencies, hosting.
 
 #### 2.1 Persistence dependencies
 I have decided to use postgres. As you can see I have decoupled the persistence from the outbox, so feel free to replace it with anything you want. 
@@ -137,7 +137,7 @@ create table outbox_messages_processed (
 );
 
 ```
-You can store processed and not processed messages in one table and nullable column `processed_on` which will store processed date if already processed. I will stick to a very inspirational document [5] in which Hugh Darwen (who was working on the relation model since the beginning) puts forward alternative approaches by introducing specialized relations. Let's do that. One nice benefit of this approach is that we gain some segration of concers - one table for holding things to process and one table that is actually an archive. We can apply tailor-made indexes, partitioning, etc.
+You can store processed and not processed messages in one table and nullable column `processed_on` which will store processed date if already processed. I will stick to a very inspirational document [5] in which Hugh Darwen (who was working on the relation model since the beginning) puts forward alternative approaches by introducing specialized relations. Let's do that. One nice benefit of this approach is that we gain some segregation of concerns - one table for holding things to process and one table that is an archive. We can apply tailor-made indexes, partitioning, etc.
 
 With small dapper wrapper (you can find it on github) the functions might look as foolows:
 ```fsharp
@@ -171,72 +171,77 @@ With small dapper wrapper (you can find it on github) the functions might look a
 ```
 The two first functions are basic stuff. Let me comment on the last one. The `RETURNING` clause will help us to maintain the sql statement atomicity. If the record won't be able to be inserted, it won't be deleted. It works the same way in MSSQL Server (but with `OUTPUT` clause), regarding other RDBMS you have to check yourself.
 
-Note that the functions signatures matches the outbox `save`, `read`, `setProcessed` functions signatures.
+Note that the functions signatures match the outbox `save`, `read`, `setProcessed` functions signatures.
 
 #### 2.2 Publisher dependency
 
-For publishing messages I've decided to pull in a library that makes the underlying message broker just a matter of configuration, despite I decided to use RabbitMQ. I've picked up Rebus just because I wanted to put my fingers on something new for me. In the past I've also used MassTransit which is also great. To be honest I like Rebus more now, the configuration is easier and it seams that (by a chance or not) fits better with F# compared to MassTransit (in the team we were not able to write consumers without implementing the `IConsumer<>` interface). Let me present some helping-functions to deal with with message publishing and subscription:
+For publishing messages, I've decided to pull in a library that makes the underlying message broker just a matter of configuration, despite I decided to use RabbitMQ. I've picked up Rebus just because I wanted to put my fingers on something new for me. In the past, I've also used MassTransit which is also great. To be honest I like Rebus more now, the configuration is easier and it seems that (by a chance or not) fits better with F# compared to MassTransit (in the team we were not able to write consumers without implementing the `IConsumer<>` interface). Let me present some helping-functions to deal with message publishing and subscription:
 
 ```fsharp
 namespace RebusMessaging
 
+open System
 open System.Threading.Tasks
 open Rebus.Activation
 open Rebus.Bus
 open Rebus.Logging
 open Rebus.Config
-open Notifications
 
 module Messaging =
-    let queueName = "mcode.fun"
+    let private queueName = "mcode.fun"
     
     let private toTask asyncA =
       asyncA |> Async.StartAsTask :> Task
-      
-    let subscribe<'a> (bus: IBus) =
-      bus.Subscribe<'a>() |> Async.AwaitTask
     
     let publish (bus: IBus) message =
       bus.Publish message |> Async.AwaitTask
+        
+    let configure (endpoint: string)
+                  (connectionName: string)
+                  (activator: BuiltinHandlerActivator)
+                  =
+      Configure.With(activator)
+               .Transport(fun transport -> transport.UseRabbitMq(endpoint, queueName)
+                                                    .ClientConnectionName(connectionName) |> ignore)
+               .Logging(fun logConfig -> logConfig.Console(LogLevel.Info))
+               .Start()
+               
+    let configureOneWay (endpoint: string)
+                        (connectionName: string)
+                        (activator: BuiltinHandlerActivator)
+                        =
+      Configure.With(activator)
+               .Transport(fun transport -> transport.UseRabbitMqAsOneWayClient(endpoint)
+                                                    .ClientConnectionName(connectionName) |> ignore)
+               .Logging(fun logConfig -> logConfig.Console(LogLevel.Info))
+               .Start()
+               
+    let registerHandler
+      (handler: 'a -> Async<Unit>)
+      (activator: BuiltinHandlerActivator) =
+        activator.Handle<'a>(fun message -> handler message |> toTask)
     
-    let start (handler: WhateverHappened -> Async<Unit>)
-              (activator: BuiltinHandlerActivator)
-              (endpoint: string)
-              =
-      activator.Handle<WhateverHappened>(fun message -> handler message |> toTask) |> ignore
-      let bus = Configure.With(activator)
-                         .Transport(fun transport -> transport.UseRabbitMq(endpoint, queueName) |> ignore)
-                         .Logging(fun logConfig -> logConfig.Console(LogLevel.Info))
-                         .Start()
+    let markerNeighbourTypes<'marker> =
+      (typeof<'marker>.DeclaringType).GetNestedTypes()
+        |> Array.filter(fun type_ -> type_.IsAbstract = false)
+    
+    let turnSubscriptionsOn (types: Type[]) (bus: IBus) =
       async {
-        do! subscribe<WhateverHappened> bus
-        return bus
+        types |> Array.iter(fun type_ -> bus.Subscribe type_ |> ignore)
       }
 ```
 Let's talk about the code now.
-* `toTask` function simply takes asynchronous function, turns it to the hot-async task model, and converts it to task type. It is handy for registering event handlers (line 26).
-* `subscribe` and `publish` are simple wrappers to make the rebus methods calls more sexy in F# code. 
-* `start` starts the bus and returns it, so we can manage its lifecycle (we have to). For instance in some appcore app we should dispose that guy using `IHostApplicationLifetime` and `ApplicationStopping` if we want to react to subscriptions during out app lifetime. I will show that later. 
-
-Not that in the `start` function I have explicitly defined one handler (`<WhateverHappened>`). I encourage you to establish a convention in your project and do assembly scanning, find all types that matches the convention and register the functions to handle the subscriptions. You may need `Type.MakeGenericType(Type[])` to achieve that (or wait for me to write an supplementary post 🙃). All in all having these handlers added explicitly is also nice! (But make sure you don't forget to register one).
+* `toTask` function simply takes an asynchronous function, turns it to the hot task model, and converts it to task type. It is handy for registering event handlers (line 42).
+* `publish` and `registerHandler` are simple wrappers to make the rebus methods calls sexier in F# code. 
+* `configure` and `configureOneWay` deal with configuration. Here you can implement a simple if-statment to connect to different message brokers. I want only rabbitmq so there is no if. The ConfigureOneWay is almost identical but does not require a queue, as it is intended for publishing messages. We will create two separate connections - one for handling incoming messages, second for publishing. This is a good practice which positevely influences performance [8]. Connection name is not required, but I decided to use it as well, rabbit management plugin shows the connection name if specified, so you can easily tell which is which.
+* `registerHandler` function is next wrapper which will help us to register handlers. We won't be using any DI Container, so let's use `BuiltinHandlerActivator` which is a nice Rebus thing that fits well into world of partial application and function-based handlers (not classes that implements `IHandler` interface). This beats MassTransit regarding F# world - As far as I know, it doesn't offers anything like that out-of-the-box.
+* `markerNeighbourTypes` and `turnSubscriptionsOn` functions allows us easily to subscribe asynchronously to messages of desired type. The first function can be changed to any other function that returns array of types, you can also remove it completely and subscribe to explicit types if you wish. I decided to use reflection and establish mini-convention, so I can forget about adding next subscriptions as long as they are kept in the same module. Good stuff for small thins. You will see that I use these functions together - I simply pass `markerNeighbourTypes` to `turnSubscriptionsOn`.
 
 ## 3. Nice stuff you showed here, but will it work? 
 Of course it will! It was working as soon as I ended writing the code. The test was green ;) Here it is:
 ```fsharp
-module when_outbox_processes_then_messages_are_published
-
-open System.Threading.Tasks
-open Rebus.Activation
-open RebusMessaging
-open Xunit
-open FsUnit.Xunit
-open Notifications
-open Toolbox
-open Outbox.PostgresPersistence
-open Outbox
-
 [<Fact>]
-let ``GIVEN pending outbox messages WHEN execute THEN messages are published to the broker AND can be consumed from the broker`` () =
+let ``GIVEN pending outbox messages WHEN execute THEN messages are published to the broker and can be consumed from the broker`` () =
     // Arrange
     let expectedNotification1 = { Id = (generateId()); SomeText = "Whatever1"; Amount = 11.11M }
     let expectedNotification2 = { Id = (generateId()); SomeText = "Whatever2"; Amount = 22.22M }
@@ -247,10 +252,9 @@ let ``GIVEN pending outbox messages WHEN execute THEN messages are published to 
         | _ when expectedNotification2.Id = message.Id -> tcs2.SetResult message
         | _ -> failwith $"This shouldn't happened, %s{nameof WhateverHappened} with unexpected Id: %d{message.Id} was received."
     }
-    use activator = new BuiltinHandlerActivator()
-    use bus = Messaging.start handler
-                              activator
-                              "amqp://localhost" |> Async.RunSynchronously
+    use activator = new BuiltinHandlerActivator() |> Messaging.registerHandler handler
+    use bus = Messaging.configure "amqp://localhost" "two-way-connection-tests" activator
+    bus |> Messaging.turnSubscriptionsOn Messaging.markerNeighbourTypes<Marker> |> Async.RunSynchronously
     Outbox.commit generateId (save DbConnection.create) [expectedNotification1; expectedNotification2] |> Async.RunSynchronously
     // Act
     Outbox.execute (read DbConnection.create)
@@ -264,25 +268,254 @@ let ``GIVEN pending outbox messages WHEN execute THEN messages are published to 
     actualNotification2 |> should equal expectedNotification2
 ```
 Lead me guide you through the test (but I hope that you aleady know eveyrything! I put quite an effort to make all of my tests easy to understand). 
-1. First I create 2 domain notification of `WhateverHappened` type.
-2. Then I prepare two `TaskCompletionSource`, which will allow me to elegantly wait for the messages delivery from the bus.
+1. First I create 2 domain notifications of a `WhateverHappened` type.
+2. Then I prepare two `TaskCompletionSource`, which will allow me to elegantly wait for the messages delivery from the bus (no Thread.Sleep or Task.Delay crap).
 3. `handler` is my subscription handler that will resolve the `TaskCompletionSource` once it will get the message from the bus.
 4. Then I create Rebus `BuiltinHandlerActivator` which will call my handler, and start the bus. 
 5. Time to commit the domain notifications to the outbox - on line 29. Normally you would partially apply the generateId and save functions and just pass the domain events to the function call in the application layer (aka imperative host). 
 6. Now we trigger the outbox action and pass the dependencies. Normally this would be done by another process (background job).
 7. In the assert part we synchronously get the notifications from `TaskCompleationSource`.
-8. And check if what we give (publish) is what we get (received).
+8. And check if what we give (publish) is what we get (received from subscription).
 
 Keep in mind that the test requires postgres database and rabbitmq to be up and running. In the repo there is docker-compose file, so you can set this up in one-line command. When you run the test you should see some side-effects using rabbit managment plugin like follows:
 ![](/img/outbox/rabbit.png)
 
-and the test should be green of course.
+Of course, the test should be green. 
 
-## 4. Hostirng the outbox
-I didn't want to write this section, by after talking to a friend of mine we discovered that the reader would expect to see such section. So... let's do the boring stuff in Giraffe (because almost everything is running in the web nowadays) and job scheduler - Quartz.NET (In the past I've used Hangfire for this and it worked very well so you may try this instead).
+## 4. Hosting the outbox - Polling publisher
+So... let's do the boring stuff in Giraffe (because almost everything is running on the web nowadays) and job scheduler - Quartz.NET (In the past I've used Hangfire - but in C# - for this and it worked very well so you may try this instead). The job scheduler and `Outbox.execute` function combination is also a pattern and it is named "Polling publisher" [1]. This will be simple app that;
+1. Will expose an endpoint that you can call to commit a domain notification. 
+2. Will subscribe to the `WhateverHappened` notification.
+3. Will handle the `WhateverHappened` by printing to console.
+4. Will publish the commited notifactions using Quartz.Net Job and .net hosted services.
+5. We will create two connections - one for publishing and one for subscribing so you will have an overview how to create "all-in-one" app, only consuming app or only publishing  app.
+
+All that with composition root, partial application and F#. 
+
+#### 4.1 Domain notification handler
+This is the easiest part here. It looks just like this:
+```fsharp
+module Handlers =
+
+  let printWhateverHappenedWithSmiley (notification: WhateverHappened) =
+    async {
+      printfn "%A" notification
+      printfn ":)"
+    }
+```
+Cool isn't it? No `IHandler<>` implementation :) I like that one.
+
+#### 4.2 Giraffe HttpHandler with endpoint for Outbox.Commit
+No drama here, if you ever wrote something in giraffe and read my [previous post about composition root and partial application](../2020-12-11-fsharp_composition_root/) you should be bored.
+```fsharp
+module HttpHandlers =
+    let whateverHappened (commit: obj list -> Async<unit>)
+                         generateId
+                         : HttpHandler =
+      fun (next: HttpFunc) (ctx: HttpContext) ->
+        task {
+          let whateverHappened: WhateverHappened = {
+            Id = generateId()
+            SomeText = "Hi there!"
+            Amount = 100.20M
+          }
+          do! commit [whateverHappened]
+          return! text $"Thank you. %A{whateverHappened} was scheduled" next ctx
+        }
+
+    let handlers (root: CompositionRoot.Dependencies) =
+      choose [
+        route "/whatever" >=> (whateverHappened root.OutboxCommit root.GenerateId)
+        route "/"         >=> text "Hello :)" ]
+```
+ 
+The `commit: obj list -> Async<unit>` is something we already have (`Outbox.commit`), generateId is a simple function that returns int64 (you can see its implementation in the repo - simple stuff with IdGen library). Normally you would call some workflow from app layer, fetch some kind of aggregate from somewhere (database), apply some domain operations and then save it with commit function in same `TransactionScope`. I decided to make the my life easier here - so I publish directly from the endpoint.
+
+#### 4.3 Glueing stuff together - CompositionRoot
+Let's have gather the dependencies now and compose the dependency tree:
+```fsharp
+namespace WebHost
+
+open Outbox
+open DapperFSharp
+open Rebus.Activation
+open Rebus.Bus
+open RebusMessaging
+
+module CompositionRoot =
+
+  type Dependencies = {
+    OutboxCommit: obj list -> Async<unit>
+    OutboxExecute: Async<unit>
+    MessageBus: IBus
+    GenerateId: unit -> int64
+  }
+  
+  let compose =
+    let pubBus = Messaging.configureOneWay
+                   "amqp://localhost"
+                   "pubConnection"
+                   (new BuiltinHandlerActivator())
+    let subBus = Messaging.configure
+                   "amqp://localhost"
+                   "subConnection"
+                   (new BuiltinHandlerActivator() |> Messaging.registerHandler Handlers.printWhateverHappenedWithSmiley)
+    let dbConnection = "Host=localhost;User Id=postgres;Password=Secret!Passw0rd;Database=outbox;Port=5432"
+    {
+      OutboxCommit = Outbox.commit
+                       IdGenerator.generateId
+                       (PostgresPersistence.save (createSqlConnection dbConnection))
+      OutboxExecute = Outbox.execute
+                        (PostgresPersistence.read (createSqlConnection dbConnection))
+                        (PostgresPersistence.moveToProcessed (createSqlConnection dbConnection))
+                        (Messaging.publish pubBus)
+      MessageBus = subBus
+      GenerateId = IdGenerator.generateId
+    }
+```
+We pass the `pubBus` to the `OutboxExecute` - so we have one connection for publishing. We don't need it elsewhere (you shouldn't even in a big commercial app). The outbox.commit will be the single place, that will publish the messages. The `subBus` will be needed, so we can subscribe on the app startup. Note that we add handlers as well to the `subBus`. The nice helper-function we wrote allow us to pipe next handlers elegantly if we need more.
+
+Finaly we compose Outbox functions and the tiny-shiny GenerateId function. Keep in mind that it would be even better to [split the composition root to 2-levels (so we can tests stuff without publishing events)](../2020-12-11-fsharp_composition_root/).
+
+#### 4.4 Program and EntryPoint
+We are close here to what Giraffe provides in its docs. The main differences are that we compose the composition root here, we subscribe to messages, and we add a hosted service - with quartz job and the polling publisher that uses the `Outbox.Execute` function.
+
+```fsharp
+module App =
+    let configureApp (compositionRoot: CompositionRoot.Dependencies)
+                     (app : IApplicationBuilder) =
+      app.UseGiraffe (HttpHandlers.handlers compositionRoot)
+
+    let configureServices (compositionRoot: CompositionRoot.Dependencies)
+                          (services: IServiceCollection)
+                          =
+      services
+        .AddGiraffe()
+        .AddHostedService(fun _ -> QuartzHosting.Service compositionRoot.OutboxExecute)
+      |> ignore
+
+    [<EntryPoint>]
+    let main _ =
+      let root = CompositionRoot.compose
+      Messaging.turnSubscriptionsOn
+        Messaging.markerNeighbourTypes<Marker>
+        root.MessageBus |> Async.RunSynchronously
+      Host.CreateDefaultBuilder()
+        .ConfigureWebHostDefaults(fun webHostBuilder ->
+          webHostBuilder
+            .Configure(configureApp root)
+            .ConfigureServices(configureServices root)
+            |> ignore)
+        .Build()
+        .Run()
+      0
+```
+
+#### 4.5 QuartzHosting Service
+
+```fsharp
+namespace WebHost
+
+open System.Threading.Tasks
+open Microsoft.Extensions.Hosting
+open FSharp.Control.Tasks.V2.ContextInsensitive
+open Quartz
+open Quartz.Impl
+open Quartz.Spi
+
+module QuartzHosting =
+    
+    type JobFactory(outboxExecute: Async<unit>) = 
+      interface IJobFactory with
+        member _.NewJob(bundle, _) =
+          match bundle.JobDetail.JobType with
+          | _type when _type = typeof<PollingPublisher.Job> -> PollingPublisher.Job(outboxExecute) :> IJob
+          | _ -> failwith "Not supported Job"
+        member _.ReturnJob _ = ()
+    
+    type Service(outboxExecute: Async<unit>) =
+      let mutable scheduler: IScheduler = null 
+      interface IHostedService with
+      
+        member _.StartAsync(cancellation) =
+          printfn $"Starting Quartz Hosting Service"
+          task {
+            let! schedulerConfig = StdSchedulerFactory().GetScheduler()
+            schedulerConfig.JobFactory <- JobFactory(outboxExecute)
+            let! _ = schedulerConfig.ScheduleJob(
+                      PollingPublisher.job,
+                      PollingPublisher.trigger,
+                      cancellation)
+            do! schedulerConfig.Start(cancellation)
+            scheduler <- schedulerConfig
+          } :> Task
+        
+        member _.StopAsync(cancellation) =
+          printfn $"Stopping Quartz Hosting Service"
+          scheduler.Shutdown(cancellation)
+```
+Let's go through this step by step
+1. Quartz easily integrates with many DI Containers. We have none. You can use built in JobFactory, but it assumes that the Job have default empty constructor. That is why I implemented the IJobFactory and rolled out my own. Consider moving JobFactory to its own file if you need more Quartz Jobs. The factory needs outboxExecute dependency, let's pass it through constructor. We will get it from the composition root (see configureServices in 4.4 section).
+2. Service is actual Hosted Service. We store scheduler reference which we Shutdown if the service stops. Since the StartAsync expects C# Tasks I decided to use task computation expression to avoid repetitive conversions between async models. 
+3. In `StartAsync` we grab the Scheduler instance from the Factory and initialize it (its ThreadPool, JobStore and DataSources).
+4. Then we specify our JobFactory, and we schedule our actual job (I will show the implementation in next section).
+5. Finally we start the scheduler, assign the reference and we convert the resulting Task<Unit> to Task to make the interface method and compiler happy.
+
+From that point you should already have an idea how to add more Quartz Jobs to the Quartz Hosted Services if you need them. Let's see how a Quartz Job may look like in F#.
+
+#### 4.6 Polling Publisher Quarzt Job
+
+To create the job we need 3 things. 
+1. A trigger - Quartz comes with handful sets of method which by using method chaining can lead you to configure different triggers. It also can accept a cron expression if you prefer.
+2. A class that implements Quartz IJob interface and its Execute method. We only need to fire `Outbox.execute` function here so we ended  up with one line method body. `[<DisallowConcurrentExecution>]` is very important for us. Quartz will make sure that only one Job at time will take place (even in case of some delays etc). Thanks to this we avoid table locks - so the polling publish won't end up on races. 
+3. A job again :) This is actual instruction which we have to pass to the scheduler, as it expects IJobDetail (not IJob). I am not sure why we can't just pass IJob to the scheduler + give some details there. This could be improved in Quartz.Net.
+
+The resulting code is short (Keep in mind that I have hardcoded some configration, you may want to parametrize this using configuration files):
+
+```fsharp
+namespace WebHost
+
+open System.Threading.Tasks
+open Quartz
+
+module PollingPublisher = 
+    let trigger = TriggerBuilder
+                    .Create()
+                    .WithSimpleSchedule(fun scheduler ->
+                        scheduler.WithIntervalInSeconds(5)
+                                 .RepeatForever() |> ignore)
+                    .Build()
+                          
+    [<DisallowConcurrentExecution>]
+    type Job(outboxExecute: Async<unit>) =
+      interface IJob with
+        member _.Execute _ =
+          outboxExecute |> Async.StartAsTask :> Task
+          
+    let job = JobBuilder
+                .Create<Job>()
+                .WithIdentity("PollingPublisher")
+                .Build();
+```
+And That's it! We have all the pieces. That was a long way, let me remind you that there is a repository with the source code, tested outbox and CI set up [4].
 
 
-## 5. Summary
+## 5. Testing
+I tried this implementation in different ways - I left it running for couple of hours and hitting the endpoint from time to time, I filled the queue with pending messages and then I've connected with the app, I tried to publish several dozen messages at once - everything is working. When I stop the app the connections with channels are closing nicely. But! If you will find something please let me know - I will try to improve my solution or simply submit me a PR.
+
+## 6. Summary
+I hope we filled a gap in F# world. 
+* I wasn't able to find any implementation of transactional outbox pattern in F#. 
+* I was not able to find any example of Quartz.Net in F# and Giraffe.
+* I was not able to find easy examples with Rebus and F# (I found only example of Rebus with Saga in console app).
+
+But maybe I am a bad googler? If so, I am happy that we've added more results to the search engine ;) What is really nice is that we glued all that stuff here! Go and spread the news to the world that F# is a kickass language and you can do such things easily! 
+
+What I am concerned about is that almost everything wants to integrate with DI Containers. This is nice for C# devs - especially in times of Microsoft.Extnesions.DependencyInjection packages, but for us - functional lovers this is pain in the ass. Especially in Quartz, I was forced to implement som kind of JobFactory... that wasn't hard but that was strange expierence... maybe I am just needlessly sceptical - all in all I found the way to do it more "functionally" but still I had to play with classes and interfaces. What is funny - I think that implementing interface in F# is more well-thought than in C#. You know - in C# you write "**:**" and you can't skip "**I**" in the interface name because then you don't know if you inherit or if you implement an interface when you read the code. This does not have a place in F#. 
+
+I really like Rebus. Maybe MassTransit has more stars on GitHub (there is also Brighter now) but this lib is just great. It is easier to start with, plays nice with F#. The only drawback is that I do not understand why the hell we need an activator for publish-only bus??? I suspect that not all types of transport support that kind of communictation, thereby mookid8000 decided to keep it that way. All in all you can pass just a new instence there and carry on. Remebmer - Rebus is cool and consider using it.
+
+TODO: microservices.io refer also the the book.
 
 - - -
 <b>References:</b><br/>
@@ -295,3 +528,4 @@ Websites: <br/>
 [5] [Hugh Darwen - How To Handle Missing Information Without Using NULL](https://www.dcs.warwick.ac.uk/~hugh/TTM/Missing-info-without-nulls.pdf)<br/>
 [6] [Rebus](https://github.com/rebus-org/Rebus)<br/>
 [7] [IdGen library](https://github.com/RobThree/IdGen)<br/>
+[8] [RabbitMq best practices](https://www.cloudamqp.com/blog/2017-12-29-part1-rabbitmq-best-practice.html)
