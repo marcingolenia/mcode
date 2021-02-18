@@ -412,6 +412,7 @@ module App =
 ```
 
 #### 4.5 QuartzHosting Service
+Let me show you now how I have implemented Hosted Service with Quartz scheduler. 
 
 ```fsharp
 namespace WebHost
