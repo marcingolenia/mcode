@@ -13,7 +13,7 @@ tags:
 ---
 ## 1. Introduction
 
-Let's consider a simple use-case to give you a full understanding of when the outbox pattern can be useful. If you know this and that about it, feel free to skip the introduction.
+Let's consider a simple use-case to give you a full understanding of when the outbox pattern can be useful. If you know this and that about it, feel free to skip the introduction. If you are eager to see the full source code here's the link: https://github.com/marcingolenia/fsharp-outbox.
 
 I am not a fan of UML, but for learning or explanations it is just fine so let's try to use the sequence diagram to explain the problem to you step by step. Basic flow;
 1. User places an order in the app.
