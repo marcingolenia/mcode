@@ -5,7 +5,7 @@ title: >-
 date: 2020-12-11T19:35:00.000Z
 description: >-
   One question you might ask yourself before starting a bigger project in F# How to inject dependencies? Let me show you how we used partial application to achieve loosely coupled testable components that can be tested in isolation or together in a broader perspective (acceptance tests). I will use Giraffe as the host, but the technique is free from any framework dependencies.
-featuredpost: true
+featuredpost: false
 featuredimage: /img/root_tree_m.png
 tags:
   - 'F#'

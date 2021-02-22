@@ -514,7 +514,7 @@ But maybe I am a bad googler? If so, I am happy that we've added more results to
 
 What I am concerned about is that almost everything wants to integrate with DI Containers. This is nice for C# devs - especially in times of `Microsoft.Extnesions.DependencyInjection` packages, but for us - functional lovers this is a pain in the ass. Especially in Quartz, I was forced to implement some kind of JobFactory... that wasn't hard but that was a strange experience... maybe I am just needlessly skeptical - all in all, I found the way to do it more "functionally" but still I had to play with classes and interfaces. What is funny - I think that implementing an interface in F# is more well-thought than in C#. You know - in C# you write "**:**" and you can't skip "**I**" in the interface name because then you don't know if you inherit or if you implement an interface when you read the code. This does not have a place in F#. 
 
-I like Rebus. Maybe MassTransit has more stars on GitHub (there is also Brighter now) but this lib is just great. It is easier to start with, plays nice with F#. The only drawback is that I do not understand why the hell we need an activator for a publish-only bus??? I suspect that not all types of transport support that kind of communication, thereby mookid8000 decided to keep it that way. All in all, you can pass just a new instance there and carry on. Remember - Rebus is cool and considers using it.
+I like Rebus. Maybe MassTransit has more stars on GitHub (there is also Brighter now) but this lib is just great. It is easier to start with, plays nice with F#. The only drawback is that I do not understand why the hell we need an activator for a publish-only bus??? I suspect that not all types of transport support that kind of communication, thereby mookid8000 decided to keep it that way. All in all, you can pass just a new instance there and carry on. Remember - Rebus is cool and You should consider it.
 
 - - -
 <b>References:</b><br/>
@@ -523,8 +523,8 @@ Websites: <br/>
 [1] [microservices.io: outbox pattern - Chris Richardson](https://microservices.io/patterns/data/transactional-outbox.html) <br/>
 [2] [microservices.io: polling publisher - Chris Richardson](https://microservices.io/patterns/data/polling-publisher.html) <br/>
 [3] [Outbox pattern in C# - Kamil Grzybek](http://www.kamilgrzybek.com/design/the-outbox-pattern/)<br/>
-[4] [Enterprise Integration Patterns: Idempotent Receiver - Gregor Hophe, Bobby Woolf](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html)
-[5] [RabbitMq best practices](https://www.cloudamqp.com/blog/2017-12-29-part1-rabbitmq-best-practice.html) <br/>
+[4] [Enterprise Integration Patterns: Idempotent Receiver - Gregor Hophe, Bobby Woolf](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html)<br/>
+[5] [RabbitMq best practices](https://www.cloudamqp.com/blog/2017-12-29-part1-rabbitmq-best-practice.html)<br/>
 [6] [Rebus library](https://github.com/rebus-org/Rebus)<br/>
 [7] [IdGen library](https://github.com/RobThree/IdGen)<br/>
 

@@ -13,6 +13,7 @@ tags:
   - sqlserver
   - postgres
   - database migrations
+  - 'F#'
 ---
 I won't introduce you to docker or Postgres - you should have some basic knowledge in this area although I will follow you with every step. When it comes to DbUp it is a .NET Library that helps you deploy changes to your SQL database. It supports:
 
@@ -120,6 +121,38 @@ namespace DbMigrator
         }
     }
 }
+```
+or Program.fs if you prefer F#, I do :)
+```fsharp
+﻿open System
+open System.Reflection
+open DbUp
+
+let logAndParseEngineResult (result: Engine.DatabaseUpgradeResult) =
+  match result.Successful with
+  | true ->
+      Console.ForegroundColor <- ConsoleColor.Green
+      Console.WriteLine("Success")
+      Console.ResetColor()
+      0
+  | false ->
+      Console.ForegroundColor <- ConsoleColor.Red
+      Console.WriteLine result.Error
+      Console.ResetColor()
+      -1
+
+[<EntryPoint>]
+let main argv =
+  let connectionString =
+    match argv |> Array.tryHead with
+    | Some connectionString -> connectionString
+    | None ->
+        "Server=localhost,1433;Initial Catalog=TravelServicesConsumer;User ID=sa;Password=Strong!Passw0rd;MultipleActiveResultSets=True;Connection Timeout=30;"
+  EnsureDatabase.For.SqlDatabase(connectionString)
+  DeployChanges.To.SqlDatabase(connectionString)
+               .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+               .LogToConsole().Build().PerformUpgrade()
+  |> logAndParseEngineResult
 ```
 
 No magic here. Everything is according to [dbup documentation](https://dbup.readthedocs.io/en/latest/). I made some minor changes as the main example on the docs is for sqlserver. I have also used `EnsureDatabase...` what is fine for local development but remember that for other environments you should create the database before with all necessary settings (collation, security, connlimit etc...). 
