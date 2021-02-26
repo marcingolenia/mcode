@@ -334,7 +334,7 @@ F# will automaticaly constraint the type for us and conclude the type:
 For some of you, it may be hard to believe but code and file ordering is important in F#. This means that you won't be able to use types, functions defined in files that are placed below the current file. You won't be able to use types and functions which are defined below your current position in the file. The same top-down ordering rule applies to solutions folders. As this seems to be strange and discouraging at the beginning it won't bother you as you go with more code after some practice. I see two main benefits thanks to this "feature":
 
 * Guarantee that you won't fall into the circular dependencies.
-* The structure of F# solutions are easier to predict. Even in a single file script you can expect most basic domain types to be at the bottom next are more complex types and finally functions. The Same rule applies fo files within the project.
+* The structure of F# solutions are easier to predict. Even in a single file script you can expect most basic domain types to be at the top next are more complex types and finally functions. The Same rule applies fo files within the project.
 
 Any downsides? Not to me.
 
