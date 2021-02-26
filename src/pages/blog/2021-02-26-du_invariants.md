@@ -161,15 +161,15 @@ module Game =
              Score = [ [] ] } |> Ok
 ```
 The most important fact here is that our domain actions act with only valid types (with one exception that we will address in the 4th point);
-1. `recordScore` can only happen with an OpenGame - You can't score in a game that was finished right? So we have enforced an invariant here. The `recordScore` can result in a finished game and the rules will be different from now on. Probably in OO you wouldn't change the game to other type (you wouldn't make the illegal state unrepresentable).
+1. `recordScore` can only happen with an OpenGame - You can't score in a game that was finished right? So we have enforced an invariant here. The `recordScore` can result in a finished game and the rules will be different from now on. Probably in OO you wouldn't change the game to another type (you wouldn't make the illegal state unrepresentable).
 2. `recordScore` accepts a scoring team that consists of teamId and the footballers color that it currently plays. 
 3. `openGame` accepts some rules, teams, started date, and gameId - these are all types that are always valid.
-4. `openGame` also enforces an invariant and it returns an error in the case of not-unique team names. Can we do better here? Of course! We can create always a valid "teams" type which will be a pair of teams and check the uniqueness for us. By doing this we won't need the error here. I wanted to actually do that, but I left it as it is so we can learn from this together.
+4. `openGame` also enforces an invariant and it returns an error in the case of not-unique team names. Can we do better here? Of course! We can create always a valid "teams" type which will be a pair of teams and check the uniqueness for us. By doing this we won't need the error here. I wanted to do that, but I left it as it is so we can learn from this together.
 
-I think you get the idea. Let's look into a different examples. If this is obvious for you, feel free to go to section 3.
+I think you get the idea. Let's look into different examples. If this is obvious for you, feel free to go to section 3.
 
 #### 2.2 Issued invoice, paid invoice
-Let me ommit the basic types like NotEmptyString or VatId for the sake of verbosity, let me just show you PolishZipCode Value Object:
+Let me omit the basic types like NotEmptyString or VatId for the sake of verbosity, let me just show you PolishZipCode Value Object:
 ```fsharp
 
 type PolishZipCode = internal PolishZipCode of string
