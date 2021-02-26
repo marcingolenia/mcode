@@ -27,17 +27,17 @@ Plus it extra easy to create new types in F# :)
 
 I like the "your functional inventions" term. Sure, let's talk. Can you give an example so we can have solid ground for the discussion?
 
-*For instance: Given a Date range, a user submits a range which "End date" is before "Start Date". I am in favor of exceptions, however, I know that it will break the execution and go to the exception handler. From the caller's perspective, we also don't know what exceptions can be thrown - we are forced to look into the implementation of more inner modules. Now if we want to do validation here we have to duplicate the code that is used to check if the date range value object is valid, and work with list of errors.*
+*For instance: Given a Date range, a user submits a range which "End date" is before "Start Date". I am in favor of exceptions, however, I know that it will break the execution and go to the exception handler. From the caller's perspective, we also don't know what exceptions can be thrown - we are forced to look into the implementation of more inner modules. Now if we want to do validation here we have to duplicate the code that is used to check if the date range value object is valid, and work with a list of errors.*
 
 You made some very good points. The two drawbacks you have mentioned made me move away from exception throwing while constructing value objects like DateRange.
 
 *So what's your recipe?*
 
-First of all I don't think that your current way of doing things is bad. For a long time I have been duplicating the code if I needed validation in the application layer. For me it wasn't that wrong - domain was using "always valid types" and throwing exception while creating this types and validation was simply a different concern.
+First of all, I don't think that your current way of doing things is bad. For a long time, I have been duplicating the code if I needed validation in the application layer. For me it wasn't that wrong - the domain was using "always valid types" and throwing exceptions while creating these types and validation was simply a different concern.
 
 *Isn't it that the domain is leaking into the application layer?*
 
-I don't think so, you have already told that it is duplicated - maybe by chance, maybe not. When we read about domain leaking, we always see examples of "moving" domain behaviours to layers or adapters which have nothing to do with the domain, then this behaviour is not in the domain - it leaked like the water from a bucket with a hole to another place.
+I don't think so, you have already told me that it is duplicated - maybe by chance, maybe not. When we read about domain leaking, we always see examples of "moving" domain behaviors to layers or adapters which have nothing to do with the domain, then this behavior is not in the domain - it leaked like the water from a bucket with a hole to another place.
 
 *I see. But cannot we move away from the duplication?*
 
@@ -49,15 +49,15 @@ That is correct. Let's try to make Your inner Uncle Bob happy. What if we return
 
 *What do you mean?*
 
-A result which can be in two states - Ok state and Error state.
+A result can be in two states - Ok state and Error state.
 
 *I saw this in C#. That was noisy code, there were some checks IsLeft, IsRight, actions passed to handle Ok state and error state.*
 
-I know what you mean, we tried this approach as well. We moved back from it, because of the noisy code that you described. The reason of the noise code is that C# doesn't support discriminated unions, and extra code is needed to imitate that behavior.
+I know what you mean, we tried this approach as well. We moved back from it, because of the noisy code that you described. The reason for the noise code is that C# doesn't support discriminated unions, and an extra code is needed to imitate that behavior.
 
 *What is discriminated union exactly?*
 
-It's an OR. Imagine that you can construct a type which can be number or a string. We can use it to model a Result which can be OK or Error. We can nest discriminated unions easily so we can model different errors.
+It's an OR. Imagine that you can construct a type that can be a number or a string. We can use it to model a Result that can be OK or Error. We can nest discriminated unions easily so we can model different errors.
 
 *Sounds interesting but I am feeling that the code will be ugly.*
 
@@ -65,11 +65,11 @@ It won't if you will use a language that supports discriminated unions and techn
 
 *Fair enough, but don't we move away from the validation topic? How can we use Result and discriminated unions to remove duplication?*
 
-We are getting there. Let's model now "always" valid" value objects and use small factory function, which in turn will return the Result type. Imagine you will be able to gather all the results and if everything is literally OK, you do the domain operation. If not, you can gather the errors and do whatever you need to do - for instance return them in an json array with 400 Status Code.
+We are getting there. Let's model now "always" valid" value objects and use a small factory function, which in turn will return the Result type. Imagine you will be able to gather all the results and if everything is literally OK, you do the domain operation. If not, you can gather the errors and do whatever you need to do - for instance, return them in a JSON array with 400 Status Code.
 
 *And F# allows that?*
 
-It alows exactly that and better than ever before thanks to applicative computation expresions. C# allows that as well, but you have to write the "noisy" code. If you need to stick with C# you may be interested with CanExecute pattern described by Vladimir Khorikov [6].
+It allows exactly that and better than ever before thanks to applicative computation expressions. C# allows that as well, but you have to write the "noisy" code. If you need to stick with C# you may be interested in CanExecute pattern described by Vladimir Khorikov [6].
 
 *I will check that. Can you show me the things you described in F#?*
 
@@ -89,7 +89,7 @@ module NotEmptyString =
 
     let value (NotEmptyString notEmptyString) = notEmptyString
 ```
-Let's introduce a TeamColor which is a DU; a type that can be of yellow or black value. It looks like an enum but it is far more powerful. For instance instead of the simple union case "Yellow" it can be of complex type (like record type). We will see this later on;
+Let's introduce a TeamColor which is a DU; a type that can be of yellow or black value. It looks like an enum but it is far more powerful. For instance, instead of the simple union case "Yellow", it can be of complex type (like record type). We will see this later on;
 ```fsharp
 // Official championship's colors
 type TeamColor = Yellow | Black
@@ -160,16 +160,16 @@ module Game =
              Rules = rules
              Score = [ [] ] } |> Ok
 ```
-The most important fact here is that our domain actions acts with only valid types (with one exception that we will address in 4th point);
-1. `recordScore` can only happen with an OpenGame - You can't score in a game that was finished right? So we have enforced an invariant here. The `recordScore` can result in finished game and the rules will be different now on. Probably in OO you wouldn't change the game to other type (you wouldn't make the illegal state unrepresentable).
+The most important fact here is that our domain actions act with only valid types (with one exception that we will address in the 4th point);
+1. `recordScore` can only happen with an OpenGame - You can't score in a game that was finished right? So we have enforced an invariant here. The `recordScore` can result in a finished game and the rules will be different from now on. Probably in OO you wouldn't change the game to another type (you wouldn't make the illegal state unrepresentable).
 2. `recordScore` accepts a scoring team that consists of teamId and the footballers color that it currently plays. 
-3. `openGame` accepts some rules, teams, started date and gameId - these are all types that are always valid.
-4. `openGame` also enforces an invariant and it returns a error in case of not-unique team names. Can we do better here? Of course! We can create always valid "teams" type which will be a pair of teams and check the uniqueness for us. By doing this we won't need the error here. I wanted to actually do that, but I left it as it is so we can learn from this together.
+3. `openGame` accepts some rules, teams, started date, and gameId - these are all types that are always valid.
+4. `openGame` also enforces an invariant and it returns an error in the case of not-unique team names. Can we do better here? Of course! We can create always a valid "teams" type which will be a pair of teams and check the uniqueness for us. By doing this we won't need the error here. I wanted to do that, but I left it as it is so we can learn from this together.
 
-I think you get the idea. Let's look into different example. If this is obvious for you, feel free to go to section 3.
+I think you get the idea. Let's look into different examples. If this is obvious for you, feel free to go to section 3.
 
 #### 2.2 Issued invoice, paid invoice
-Let me ommit the basic types like NotEmptyString or VatId for the sake of verbosity, let me just show you PolishZipCode Value Object:
+Let me omit the basic types like NotEmptyString or VatId for the sake of verbosity, let me just show you PolishZipCode Value Object:
 ```fsharp
 
 type PolishZipCode = internal PolishZipCode of string
@@ -186,10 +186,10 @@ module PolishZipCode =
       | _ -> Error "Invalid"
     let value (AlphaIso2 alphaIso2) = alphaIso2
 ```
-If you need to support more ZipCodes you can introduce international zip-codes format (if acceptable) or introduce discriminated union for more Zip Codes format. Yet another option is to introduce alias for string if it is enough for you to accept zip-code as plain unvalidated string. In some domains maybe this not a problem. Notice what is going on here; We use Value-Objects types as a validation building block. It is quite good approach, let me bring here quatoation by Martin Fowler [5]: 
+If you need to support more ZipCodes you can introduce international zip-codes format (if acceptable) or introduce discriminated union for more Zip Codes format. Yet another option is to introduce an alias for string if it is enough for you to accept zip-code as a plain unvalidated string. In some domains maybe this is not a problem. Notice what is going on here; We use Value-Objects types as a validation building block. It is a quite good approach, let me bring here quotation by Martin Fowler [5]: 
 > While I can represent a telephone number as a string, turning into a telephone number object makes variables and parameters more explicit (with type checking when the language supports it), a natural focus for validation, and avoiding inapplicable behaviors (such as doing arithmetic on integer id numbers). - *Martin Fowler*.
 
-The nice side-effect from the PolishZipCode value object is active pattern for Regex matching, it could be good idea to extract that function somwhere. Now the simple domain;
+The nice side-effect from the PolishZipCode value object is an active pattern for Regex matching, it could be a good idea to extract that function somewhere. Now the simple domain;
 ```fsharp
 module Invoicing =
 
@@ -234,7 +234,7 @@ module Invoicing =
       PaidOn = paymentDate
     }
 ```
-Again - domain action accepts always valid invoice, no validation here. It will be done while constructing Value Objects. 
+Again - domain action accepts always valid invoices, no validation here. It will be done while constructing Value Objects. 
 
 ###### 2.3 You name the next example and try to implement it... 😉
 
@@ -245,7 +245,7 @@ Let's forget about IO operations and consider each workflow (aka use case) as a 
 
 In real code these 2 phases will be reflected by 2 separate computation expression;
 1. Validation
-2. Async - because of the IO that will take place just after domain operation, or AsyncResult because I didn't enforce "always valid" entities in the opening game flow, so it will return an error. Even if I would, you can end up in situation where aggregate action may have to do some kind invariants enforcments which won't succeed and you won't be able to guarantee the domain action success with providing always valid types.
+2. Async - because of the IO that will take place just after domain operation, or AsyncResult because I didn't enforce "always valid" entities in the opening game flow, so it will return an error. Even if I would, you can end up in a situation where aggregate action may have to do some kind invariants enforcements which won't succeed and you won't be able to guarantee the domain action success with providing always valid types.
 
 Let's stick with the foosball example - the other one You can do Yourself by an analogy. We will use the shiny new feature of F# 5 - applicative Computation Expressions for validation. Ploeh wrote a validation computation expression for F# Advent 2020 [3] if you are curious how to write such a thing you should check his post. We will use the ready implementation provided by FsToolkit [4]. I have been using this library in many projects because of the nice AsyncResult computation expression. 
 
@@ -277,7 +277,7 @@ module OpenGameFlow =
       return! save (openedGame |> OpenGame)
     }
 ```
-I hope You can see the 2-phases that I described. I've used anonymous record the carry over the validation result to asyncResult computation expression. Tuples are also nice for that purpose - I leave it up to you. The implementation of `toErrorMessage` is rather poor but does the job if your don't need sophisticated validation. If you need localisation then you can provide better implementation of the function (respecting different error types) and you are good to go - not a big challange. Let's move on to the make a score flow;
+I hope You can see the 2-phases that I described. I've used anonymous record the carry over the validation result to asyncResult computation expression. Tuples are also nice for that purpose - I leave it up to you. The implementation of `toErrorMessage` is rather poor but does the job if you don't need sophisticated validation. If you need localization then you can provide a better implementation of the function (respecting different error types) and you are good to go - not a big challenge. Let's move on to the make a score flow;
 
 ```fsharp
 module ScoreFlow =
@@ -304,9 +304,38 @@ module ScoreFlow =
       do! save newGame
     }
 ```
-Note that our Aggregate (Game) can be in two states: Finished and Open. The domain doesn't even allow us to pass the game to the recordSoce domain action, so we pattern match over the game - actually we do validation which plays nicely with the validation that we already did in phase 1. It can happen that our phase 1 validation will return errors and the game will be finished. In that case we won't return the error "Cannot make a score in a finished game". I don't find this to be a problem even from the UI perspective. Imagine that at first you get two errors; ["Non-empty string is required.", "Invalid footballers color; acceptable values are: yellow, black"]. Once you correct the input you get another one; ["Cannot make a score in a finished game."]. I even think this is better; first we validate the "input" then the action being made.
+Note that our Aggregate (Game) can be in two states: Finished and Open. The domain doesn't even allow us to pass the game to the recordSoce domain action, so we pattern match over the game - we do validation which plays nicely with the validation that we already did in phase 1. It can happen that our phase 1 validation will return errors and the game will be finished. In that case, we won't return the error "Cannot make a score in a finished game". I don't find this to be a problem even from the UI perspective. Imagine that at first, you get two errors; ["Non-empty string is required.", "Invalid footballers color; acceptable values are: yellow, black"]. Once you correct the input you get another one; ["Cannot make a score in a finished game."]. I even think this is better; first, we validate the "input" then the action is made.
 
-## 3. Summary
+#### 3.1 A test
+Now we can get nice HttpResponse with 400 StatusCode and proper messages from our validation:
+```fsharp
+[<Theory>]
+[<InlineData("", "")>]
+[<InlineData(null, null)>]
+[<InlineData("", "Team")>]
+[<InlineData("Team", null)>]
+[<InlineData("", null)>]
+let ``GIVEN two teams names AND at least one is empty or null WHEN createGameHandler THEN response is bad request.`` (team1, team2) =
+  // Arrange
+  let httpRequest = buildMockHttpContext () |> writeToBody { Team1 = team1; Team2 = team2 }
+  let root = testTrunk |> composeRoot
+  let httpResponse =
+    task {
+      // Act
+      let! httpResponse = HttpHandler.createGameHandler root.CreateGame root.GenerateId next httpRequest
+      return httpResponse
+    } |> Async.AwaitTask |> Async.RunSynchronously |> Option.get
+  // Assert
+  httpResponse.Response.StatusCode |> should equal StatusCodes.Status400BadRequest
+  if not (String.IsNullOrWhiteSpace team1) then
+    httpResponse.Response |> toString |> should haveSubstring "[\"team2 id cannot be empty.\"]"
+  elif not (String.IsNullOrWhiteSpace team2) then
+    httpResponse.Response |> toString |> should haveSubstring "[\"team1 id cannot be empty.\"]"
+  else
+    httpResponse.Response |> toString |> should haveSubstring "[\"team1 id cannot be empty.\",\"team2 id cannot be empty.\"]"
+```
+You can find more tests in the GitHub repository [9].
+## 4. Summary
 Let me start the summary with a quote from Greg Young's post [1]:
 > Without using invariants the first test I should be writing is `should_throw_not_a_cyclops_exception_when_cyclops_has_two_eyes()` … As soon as I find myself writing this test I should be seeing the language and realizing that I am being silly. - *Greg Young*.
 
@@ -322,7 +351,7 @@ In OO languages you are constraining yourself with a simpler type system, thereb
 
 > The limits of my language are the limits of my world - *Ludwig Wittgenstein*.
 
-and one risky opinion; Validation is not a domain concept in terms of DDD, it is your application (layer) job to make sure that commands can be applied to the domain properly. The application can use domain types to execute validation (or specifacations like in blue book [7]) but the domain remains unaware of this act.
+and one risky opinion; Validation is not a domain concept in terms of DDD, it is your application (layer) job to make sure that commands can be applied to the domain properly. The application can use domain types to execute validation (or specifications like in blue book [7]) but the domain remains unaware of this act.
 
 - - -
 <b>References:</b><br/>
