@@ -5,7 +5,7 @@ title: >-
 date: 2021-02-26T18:35:00.000Z
 description: >-
   Everyone (including me) when applying DDD at some points fights with validation and invariants. Probably You tried different approaches already - validating within the domain, duplicating the validation logic for both: application validation and business rules enforcement, or You tried something else. In this post, we will dig out the old (but still living) "always valid" camp, and by using discriminated unions we will model both - always valid entities and aggregate invariants as types. Examples in F#.
-featuredpost: true
+featuredpost: false
 featuredimage: /img/du_invariants/agg_rules2.png
 tags:
   - 'F#'

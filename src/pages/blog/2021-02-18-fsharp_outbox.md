@@ -5,7 +5,7 @@ title: >-
 date: 2021-02-18T11:35:00.000Z
 description: >-
   If you are implementing more than one service and you need to establish asynchronous communication in-between, or if you need bullet-proof asynchronous communication with 3rd party services the outbox pattern might be a handy tool. Let's look at how can we implement one in the beloved F#!
-featuredpost: true
+featuredpost: false
 featuredimage: /img/outbox.png
 tags:
   - 'F#'
