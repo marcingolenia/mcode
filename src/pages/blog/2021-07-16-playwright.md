@@ -2,7 +2,7 @@
 templateKey: blog-post
 title: >-
   Let's play with playwright using F# scripts.
-date: 2021-07-06T22:35:00.000Z
+date: 2021-07-16T17:35:00.000Z
 description: >-
   In June Microsoft announced that .NET SDK is stable. For a long time Selenium was (as far as I know) the only feature-rich web testing framework in .NET (except paid ones like Ranorex or Telerik Test Studio). I never liked the waits I had to do which often caused the tests to be fragile. Playwright's puppeteer-like SDKs promises automatic waits and support for Python/.Net/Node.js/Java. Let's try this stuff in F#!
 featuredpost: true
