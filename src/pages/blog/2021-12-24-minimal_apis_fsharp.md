@@ -14,13 +14,13 @@ tags:
 
 > This post is part of the F# Advent Calendar 2021. Special thanks to Sergey Tihon for organizing this! [Check out all the other great posts there!](https://sergeytihon.com/2021/10/18/f-advent-calendar-2021/).
 
-If You are "show me the code guy", You can just go and see the repo here: https://github.com/marcingolenia/minimal-apis-fsharp. But I invite You to read full post.
+If You are "show me the code" guy, You can just go and see the repo here: https://github.com/marcingolenia/minimal-apis-fsharp. But I invite You to read the full post.
 
-So! I saw how easy it should be to create API using the new "Minimal API" model brought to live in .NET 6. Let's go and check. No powerfull IDE is required, we won't use any templates. Just bash and VSCode, but a Notepad or nano will do.
+So! I saw how easy it should be to create API using the new "Minimal API" model brought to live in .NET 6. Let's go and check. No powerful IDE is required, we won't use any templates. Just bash and VSCode, but a notepad or nano will do.
 
-## 2. Lets build the simplest API
+## 2. Let's build the simplest API
 
-Lets create the folder structure and 2 files - fsproj and Program.fs that will run our API:
+Let's create the folder structure and 2 files - fsproj and Program.fs that will run our API:
 
 ```bash
 mkdir -p MinApi/MinApi && cd "$_"
@@ -40,7 +40,7 @@ Let's pick up the proper SDK nad select the framework version in the project fil
     </ItemGroup>
 </Project>
 ```
-Easy. No templates or generated projects are needed right? Time to write some code with help from MSDN documentation. This should work:
+Easy. No templates or generated projects are needed right? Time to write some code with the help of MSDN documentation. This should work:
 
 ```fsharp
 open Microsoft.AspNetCore.Builder
@@ -76,7 +76,7 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
       Request finished HTTP/1.1 GET http://localhost:5000/ - - - 200 - text/plain;+charset=utf-8 32.5680ms
 ```
-Cool! You can see it in logs that it worked (I've hit the endpoint). 
+Cool! You can see in the logs that it worked (I've hit the endpoint). 
 
 What makes me anxious... is the Func up there. We cannot simply pass fsharp function as a parameter in the route mapping, we have to convert it to C# Func. It is easy to do, but do we have to? I really like Giraffe because of its simplicity and F# friendly programming model (Kleisli composition aka fish operator). Let me show You how to use it with minimal APIs and get rid off Func casting.
 
@@ -94,7 +94,7 @@ let's add Giraffe to the project file:
     </ItemGroup>
 </Project>
 ```
-By mentioning that I love Giraffe because of simplicity, I had mainly in mind the fact that Giraffe is just a middleware, that runs on the request. So to plug it in it enough to do this (works with current Giraffe version, You don't have to wait for Giraffe 6 - there is alpha 2 on nuget at the moment of writing):
+By mentioning that I love Giraffe because of the simplicity, I had mainly in mind the fact that Giraffe is just a middleware that runs on the request. So to plug it in it is enough to do this (works with current Giraffe version, You don't have to wait for Giraffe 6 - there is alpha 2 on nuget at the moment of writing):
 
 ```fsharp
 open Microsoft.AspNetCore.Builder
@@ -159,7 +159,7 @@ Infrastructure components, such as the test web host and in-memory test server (
 </Project>
 
 ```
-and time to add projects to sln using two simple commands:
+Time to add projects to sln using two simple commands:
 ```bash
 dotnet sln add MinApi/MinApi.fsproj
 dotnet sln add MinApi.Tests/MinApi.Tests.fsproj
@@ -300,7 +300,7 @@ let ``/ should return "Hello world"`` () =
 ```
 You should also consider more F# friendly assertion library. I Love FsUnit, Expecto is also cool (awesome failed assertion messages). If You need to build complex API I advise You to move away from dependency injection and the whole "IServiceCollection" stuff in sake for composition. You may want to check my another post on this: https://mcode.it/blog/2020-12-11-fsharp_composition_root/. If You read it keep in mind one thing; I tend to do Inflexible composition root now and;
 1. For dependencies that I own (ie DB, Rabbit broker etc) I run the dependencies using docker.
-2. For dependencies that I don't own (ie other team service, salesforce, etc) I build simple mocks. Depending on the environment (dev or prod) I compose real stuff or mocked one. This has nice benefit; I am able to use 100% of my service locally. 
+2. For dependencies that I don't own (ie other team service, salesforce, etc) I build simple mocks. Depending on the environment (dev or prod) I compose real stuff or mocked one. This has a nice benefit; I am able to use 100% of my service locally. 
 
 ## 5. Conclusions
 We've built a simple API using simple tools - 0 generated projects using IDEs, 0 templates, 100% code which we control and understand. I hope You've also learned some bash tricks. Now! Let's compare this (I've removed the empty Program class in sake of fair comparison):
@@ -329,7 +329,7 @@ app.listen(5000, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 ```
-This is normal since many many years for node.js developers. I am happy that .NET ecosystem has gained a very lean and quick way to start building an API, like node.js devs have been doing. All in all I hope You share my opinion that the minimal apis, did improve F# web dev-ex as well. Remember, despite of the simple default host model in minimal API, You still have the power to adjust host, service collection, error handling, logging etc. Benefit from simplicity, configure later.
+This is normal since many many years for node.js developers. I am happy that .NET ecosystem has gained a very lean and quick way to start building an API, like node.js devs have been doing. All in all I hope You share my opinion that the minimal apis, did improve F# web dev-ex as well. Remember, despite of the simple default host model in minimal API, You still have the power to adjust the host, service collection, error handling, logging etc. Benefit from simplicity now, configure later.
 
 In addition I hope that the trick I mentioned (including sample repo) on how to integrate F# Giraffe stuff into existing C# WebApi will help You out there in bringing F# to Your company.
 - - -
