@@ -34,6 +34,11 @@ It is enough to run this command:
 git config --global push.default current
 ```
 
+To set automatic tracking (so You can pull changes from the origin) run this:
+```bash
+git config --global push.autoSetupRemote true
+```
+
 Done. Years of copy & pasting the output command are gone. You might want to see if the configuration is correct using
 ```bash
 git config --global --list
